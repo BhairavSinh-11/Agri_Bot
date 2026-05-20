@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>AgriBot - Smart Agriculture Platform</title>
+     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }} "
+          type="image/x-icon">
+   
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+   <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+    background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+                      url("{{ url_for('static', filename='img/image2.jpg') }}");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+        
+        .crop-card {
+            background: linear-gradient(135deg, #1f2937, #111827);
+            border-radius: 1rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid #374151;
+        }
+        
+        .crop-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+            border-color: #22c55e;
+        }
+        
+        .crop-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .season-tab, .filter-select {
+            background-color: #1f2937;
+            color: #9ca3af;
+            padding: 0.75rem 1.5rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid #374151;
+        }
+        
+        .season-tab:hover, .filter-select:hover {
+            background-color: #2d3748;
+            color: #22c55e;
+        }
+        
+        .season-tab.active {
+            background-color: #22c55e;
+            color: white;
+            border-color: #22c55e;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, #1f2937, #111827);
+            border-radius: 1.5rem;
+            max-width: 900px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalFadeIn 0.3s ease;
+            border: 1px solid #374151;
+        }
+        
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .modal-close {
+            position: sticky;
+            top: 1rem;
+            right: 1rem;
+            float: right;
+            background-color: #374151;
+            color: white;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 1rem;
+        }
+        
+        .modal-close:hover {
+            background-color: #ef4444;
+            transform: rotate(90deg);
+        }
+        
+        .crop-card-item {
+            transition: all 0.3s ease;
+        }
+        
+        .crop-card-item.hidden-crop {
+            display: none;
+        }
+        
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #0a0f1a;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #4b5563;
+            border-radius: 5px;
+        }
+        
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .detail-item {
+            background-color: #111827;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            border-left: 3px solid #22c55e;
+        }
+        
+        .detail-label {
+            font-size: 0.75rem;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .detail-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: white;
+            margin-top: 0.25rem;
+        }
+        
+        .filter-group {
+            background-color: #1f2937;
+            padding: 1rem;
+            border-radius: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .filter-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #22c55e;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        
+        .filter-badge {
+            background-color: #2d3748;
+            color: #9ca3af;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid #374151;
+        }
+        
+        .filter-badge:hover, .filter-badge.active {
+            background-color: #22c55e;
+            color: white;
+            border-color: #22c55e;
+        }
+        
+        #resetFilters {
+            transition: all 0.3s ease;
+        }
+        
+        #resetFilters:hover {
+            transform: scale(1.05);
+        }
+        @keyframes floatIcon {
+         0% { transform: translateY(0px); }
+         50% { transform: translateY(-8px); }
+         100% { transform: translateY(0px); }
+        }
+
+        .icon-float {
+            animation: floatIcon 2s ease-in-out infinite;
+                }
+
+                
+</style>
+</head>
+<body>
+
+    {% include 'navbar.html' %}
+
+    <!-- Crop Information Main Section -->
+    <section class="py-12 md:py-20 bg-gray-900 min-h-screen bg-black bg-opacity-70">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- Header -->
+            <div class="text-center mb-12" data-aos="fade-up">
+
+                    <!-- Main Heading -->
+                 <h1 class="text-3xl sm:text-5xl font-extrabold mt-3">
+                     <span class="text-white">Crop</span> 
+                     <span class="text-green-500">Analytics Dashboard</span>
+                     <i class="fas fa-seedling text-green-500 icon-float"></i>
+                 </h1>
+
+                 <!-- Subtitle -->
+                 <p class="text-base sm:text-xl text-gray-400 mt-4 max-w-3xl mx-auto leading-relaxed">
+                     Explore 60+ crops with smart filters, detailed insights, and data-driven farming guidance.
+                 </p>
+
+             </div>
+            
+            <!-- Advanced Filters Section -->
+            <div class="bg-gray-800 rounded-2xl p-6 mb-8" data-aos="fade-up" data-aos-delay="100">
+                <h3 class="text-xl font-bold text-white mb-4 flex items-center">
+                    <i class="fas fa-filter text-green-500 mr-2"></i> Advanced Filters
+                </h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                    <!-- Crop Type Filter -->
+                    <div class="filter-group">
+                        <label class="filter-label"><i class="fas fa-tag text-white mr-1"></i> Crop Type</label>
+                        <select id="filterType" class="w-full bg-gray-700 text-white rounded-lg px-3 py-2 border border-gray-600 focus:outline-none focus:border-green-500">
+                            <option value="all">All Types</option>
+                            <option value="cereal">🌾 Cereals</option>
+                            <option value="pulse">🌿 Pulses</option>
+                            <option value="oilseed">🥜 Oilseeds</option>
+                            <option value="vegetable">🍅 Vegetables</option>
+                            <option value="fruit">🍎 Fruits</option>
+                            <option value="cash">💰 Cash Crops</option>
+                            <option value="spice">🌶️ Spices</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Water Requirement Filter -->
+                    <div class="filter-group">
+                        <label class="filter-label"><i class="fas fa-tint text-white mr-1"></i> Water Requirement</label>
+                        <select id="filterWater" class="w-full bg-gray-700 text-white rounded-lg px-3 py-2 border border-gray-600 focus:outline-none focus:border-green-500">
+                            <option value="all">All</option>
+                            <option value="low">💧 Low (300-500mm)</option>
+                            <option value="moderate">💧💧 Moderate (500-800mm)</option>
+                            <option value="high">💧💧💧 High (800-1500mm)</option>
+                            <option value="very_high">💧💧💧💧 Very High (1500mm+)</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Price Filter -->
+                    <div class="filter-group">
+                        <label class="filter-label"><i class="fas fa-rupee-sign text-white mr-1"></i> Selling Price(per Q)</label>
+                        <select id="filterPrice" class="w-full bg-gray-700 text-white rounded-lg px-3 py-2 border border-gray-600 focus:outline-none focus:border-green-500">
+                            <option value="all">All Prices</option>
+                            <option value="low">💰 Low (Below ₹2,000)</option>
+                            <option value="moderate">💰💰 Moderate (₹2,000 - ₹5,000)</option>
+                            <option value="high">💰💰💰 High (₹5,000 - ₹10,000)</option>
+                            <option value="very_high">💰💰💰💰 Very High (Above ₹10,000)</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Fertilizer Usage Filter -->
+                    <div class="filter-group">
+                        <label class="filter-label"><i class="fas fa-flask text-white mr-1"></i> Fertilizer Usage</label>
+                        <select id="filterFertilizer" class="w-full bg-gray-700 text-white rounded-lg px-3 py-2 border border-gray-600 focus:outline-none focus:border-green-500">
+                            <option value="all">All</option>
+                            <option value="low">🌱 Low (Below 50kg/hectare)</option>
+                            <option value="moderate">🌱🌱 Moderate (50-100kg/hectare)</option>
+                            <option value="high">🌱🌱🌱 High (Above 100kg/hectare)</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Growing Time Filter -->
+                    <div class="filter-group">
+                        <label class="filter-label"><i class="fas fa-calendar-alt text-white mr-1"></i> Growing Days</label>
+                        <select id="filterDays" class="w-full bg-gray-700 text-white rounded-lg px-3 py-2 border border-gray-600 focus:outline-none focus:border-green-500">
+                            <option value="all">All</option>
+                            <option value="short">⏱️ Short (Below 90 days)</option>
+                            <option value="medium">⏱️⏱️ Medium (90-150 days)</option>
+                            <option value="long">⏱️⏱️⏱️ Long (Above 150 days)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Season Filter (Quick Filter) -->
+                <div class="mt-4 pt-4 border-t border-gray-700">
+                    <label class="filter-label"><i class="fas fa-cloud-sun mr-1"></i> Season Filter (Quick)</label>
+                    <div class="flex flex-wrap gap-2">
+                        <div class="season-tab active" data-season="all">🌾 All Seasons</div>
+                        <div class="season-tab" data-season="summer">☀️ Summer</div>
+                        <div class="season-tab" data-season="winter">❄️ Winter</div>
+                        <div class="season-tab" data-season="monsoon">🌧️ Monsoon</div>
+                        <div class="season-tab" data-season="year-round">🔄 Year Round</div>
+                    </div>
+                </div>
+                
+                <!-- Reset Filters Button -->
+                <div class="mt-4 text-center">
+                    <button id="resetFilters" class="bg-green-600 text-white px-6 py-2 rounded-full hover:bg-green-700 transition font-semibold">
+                        <i class="fas fa-sync-alt mr-2"></i> Reset All Filters
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Results Count -->
+            <div class="mb-4 text-gray-400" id="resultsCount">
+                Showing <span id="cropCount">0</span> crops
+            </div>
+            
+            <!-- Crops Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="cropsGrid">
+                <!-- Crop cards will be dynamically populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal for Detailed Crop Info -->
+    <div id="cropModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-close" onclick="closeModal()">
+                <i class="fas fa-times"></i>
+            </div>
+            <div class="p-6 md:p-8" id="modalBody">
+                <!-- Dynamic content will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-950 text-white pt-10 pb-6 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="space-y-3">
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-seedling text-2xl text-green-500"></i>
+                        <span class="font-bold text-xl text-white">Agri<span class="text-green-500">Bot</span></span>
+                    </div>
+                    <p class="text-gray-400 text-xs leading-relaxed">
+                        Empowering farmers with technology for smarter, sustainable farming.
+                    </p>
+                    <div class="flex space-x-3">
+                        <a href="#" class="text-gray-400 hover:text-green-500 text-lg"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-green-500 text-lg"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-green-500 text-lg"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-green-500 text-lg"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-sm font-bold text-white mb-3">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-green-500 text-xs">About Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-green-500 text-xs">How It Works</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-green-500 text-xs">FAQs</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-green-500 text-xs">Blog</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-sm font-bold text-white mb-3">Our Services</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-green-500 text-xs">Crop Analysis</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-green-500 text-xs">Marketplace</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-green-500 text-xs">Price Updates</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-green-500 text-xs">Expert Consultation</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-sm font-bold text-white mb-3">Contact</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-map-marker-alt text-green-500 text-xs mt-1"></i>
+                            <span class="text-gray-400 text-xs">New Delhi, India</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fas fa-phone-alt text-green-500 text-xs"></i>
+                            <span class="text-gray-400 text-xs">+91 98765 43210</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fas fa-envelope text-green-500 text-xs"></i>
+                            <span class="text-gray-400 text-xs">support@agribot.com</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 pt-6">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-400 text-xs text-center md:text-left">
+                        © 2026 AgriBot. All rights reserved. | Empowering Farmers Through Technology
+                    </p>
+                    <div class="flex space-x-4 mt-3 md:mt-0">
+                        <a href="#" class="text-gray-400 hover:text-green-500 text-xs">Privacy</a>
+                        <a href="#" class="text-gray-400 hover:text-green-500 text-xs">Terms</a>
+                        <a href="#" class="text-gray-400 hover:text-green-500 text-xs">Cookies</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    {%include 'profile.html'%}
+
+
+    <script>
+
+        window.addEventListener("scroll", () => {
+    const nav = document.querySelector("nav");
+    if (window.scrollY > 10) {
+        nav.classList.add("shadow-2xl");
+    } else {
+        nav.classList.remove("shadow-2xl");
+    }
+});
+        // Complete Crop Database - 75+ Crops
+        const cropsData = [
+            // ========== CEREALS (10 crops) ==========
+
+            { id: 1, name: "Rice (Paddy)", hindiName: "चावल", season: "monsoon", type: "cereal", image: "{{ url_for('static', filename='img/cereals/rice.jpg') }}", shortInfo: "Rice is the staple food crop of India, grown extensively during monsoon season.", waterReq: "high", waterMm: "1000-1500mm", pricePerQtl: 2000, priceCategory: "moderate", fertilizerKg: 120, fertilizerCategory: "high", growingDays: 135, daysCategory: "medium", scientificName: "Oryza sativa", soilType: "Clayey or loamy (water-retentive)", temperature: "20°C - 35°C", yield: "25-35 quintals/hectare", commonPests: "Stem borer, Leaf folder, Brown plant hopper", description: "Rice is the staple food for more than half of the world's population. It requires standing water throughout its growing period and thrives in monsoon conditions." },
+           
+            { id: 2, name: "Wheat", hindiName: "गेहूँ", season: "winter", type: "cereal", image: "{{ url_for('static', filename='img/cereals/wheat.jpg') }}", shortInfo: "Wheat is the main winter cereal crop, requiring cool climate.", waterReq: "moderate", waterMm: "450-650mm", pricePerQtl: 2200, priceCategory: "moderate", fertilizerKg: 120, fertilizerCategory: "high", growingDays: 135, daysCategory: "medium", scientificName: "Triticum aestivum", soilType: "Loamy, well-drained", temperature: "15°C - 25°C", yield: "30-45 quintals/hectare", commonPests: "Aphids, Termites, Rust fungi", description: "Wheat is the second most important cereal crop in India. It requires cool temperatures during growing season and dry weather at harvest time." },
+
+            { id: 3, name: "Maize (Corn)", hindiName: "मक्का", season: "summer", type: "cereal", image: "{{ url_for('static', filename='img/cereals/corn.jpg') }}", shortInfo: "Maize is a warm-season crop grown for grain and fodder.", waterReq: "moderate", waterMm: "500-800mm", pricePerQtl: 2000, priceCategory: "moderate", fertilizerKg: 120, fertilizerCategory: "high", growingDays: 105, daysCategory: "medium", scientificName: "Zea mays", soilType: "Well-drained loamy soil", temperature: "21°C - 30°C", yield: "25-35 quintals/hectare", commonPests: "Stem borer, Armyworm, Aphids", description: "Maize is an important cereal crop used for human consumption, animal feed, and industrial purposes." },
+           
+            { id: 4, name: "Barley", hindiName: "जौ", season: "winter", type: "cereal", image: "{{ url_for('static', filename='img/cereals/barely.jpg') }}", shortInfo: "Barley is a hardy winter cereal grain.", waterReq: "low", waterMm: "350-500mm", pricePerQtl: 1800, priceCategory: "low", fertilizerKg: 80, fertilizerCategory: "moderate", growingDays: 120, daysCategory: "medium", scientificName: "Hordeum vulgare", soilType: "Well-drained loamy soil", temperature: "12°C - 24°C", yield: "20-30 quintals/hectare", commonPests: "Aphids, Rust", description: "Barley is used for animal feed, malting, and human consumption." },
+           
+            { id: 5, name: "Sorghum (Jowar)", hindiName: "ज्वार", season: "monsoon", type: "cereal", image: "{{ url_for('static', filename='img/cereals/sorghum.jpg') }}", shortInfo: "Jowar is a drought-tolerant millet crop.", waterReq: "low", waterMm: "300-450mm", pricePerQtl: 2500, priceCategory: "moderate", fertilizerKg: 60, fertilizerCategory: "moderate", growingDays: 110, daysCategory: "medium", scientificName: "Sorghum bicolor", soilType: "Well-drained loamy soil", temperature: "25°C - 35°C", yield: "15-25 quintals/hectare", commonPests: "Stem borer, Shoot fly", description: "Jowar is an important millet crop in dryland farming areas." },
+           
+            { id: 6, name: "Pearl Millet (Bajra)", hindiName: "बाजरा", season: "monsoon", type: "cereal", image: "{{ url_for('static', filename='img/cereals/bajiri.jpg') }}", shortInfo: "Bajra is a hardy millet grown in arid regions.", waterReq: "low", waterMm: "250-400mm", pricePerQtl: 2200, priceCategory: "moderate", fertilizerKg: 50, fertilizerCategory: "moderate", growingDays: 85, daysCategory: "short", scientificName: "Pennisetum glaucum", soilType: "Sandy loam", temperature: "25°C - 40°C", yield: "10-20 quintals/hectare", commonPests: "Shoot fly, Stem borer", description: "Bajra is a nutritious grain grown in dry and semi-dry regions." },
+            
+            { id: 7, name: "Finger Millet (Ragi)", hindiName: "रागी", season: "monsoon", type: "cereal", image: "{{ url_for('static', filename='img/cereals/finger.jpg') }}", shortInfo: "Ragi is a calcium-rich millet crop.", waterReq: "low", waterMm: "300-500mm", pricePerQtl: 3000, priceCategory: "moderate", fertilizerKg: 50, fertilizerCategory: "moderate", growingDays: 100, daysCategory: "medium", scientificName: "Eleusine coracana", soilType: "Well-drained red soil", temperature: "20°C - 30°C", yield: "15-20 quintals/hectare", commonPests: "Aphids, Shoot fly", description: "Ragi is highly nutritious, rich in calcium and iron." },
+           
+            { id: 8, name: "Foxtail Millet", hindiName: "कंगनी", season: "monsoon", type: "cereal", image: "{{ url_for('static', filename='img/cereals/foxtail.jpeg') }}", shortInfo: "Foxtail millet is a drought-resistant grain.", waterReq: "low", waterMm: "250-400mm", pricePerQtl: 3500, priceCategory: "moderate", fertilizerKg: 40, fertilizerCategory: "low", growingDays: 80, daysCategory: "short", scientificName: "Setaria italica", soilType: "Well-drained loamy soil", temperature: "25°C - 35°C", yield: "10-15 quintals/hectare", commonPests: "Shoot fly, Stem borer", description: "Foxtail millet is gluten-free and rich in dietary fiber." },
+           
+            { id: 9, name: "Oats", hindiName: "जई", season: "winter", type: "cereal", image: "{{ url_for('static', filename='img/cereals/oats.jpg') }}", shortInfo: "Oats are a healthy winter cereal grain.", waterReq: "moderate", waterMm: "500-700mm", pricePerQtl: 2800, priceCategory: "moderate", fertilizerKg: 80, fertilizerCategory: "moderate", growingDays: 120, daysCategory: "medium", scientificName: "Avena sativa", soilType: "Well-drained loamy soil", temperature: "15°C - 25°C", yield: "20-30 quintals/hectare", commonPests: "Aphids, Rust", description: "Oats are known for their high fiber content and health benefits." },
+            
+            // ========== PULSES (8 crops) ==========
+            { id: 10, name: "Chickpea (Gram)", hindiName: "चना", season: "winter", type: "pulse", image: "{{ url_for('static', filename='img/pulses/chickpea.jpg') }}", shortInfo: "Chickpea is the most important pulse crop of India.", waterReq: "low", waterMm: "300-450mm", pricePerQtl: 5200, priceCategory: "high", fertilizerKg: 40, fertilizerCategory: "low", growingDays: 110, daysCategory: "medium", scientificName: "Cicer arietinum", soilType: "Well-drained loamy soil", temperature: "20°C - 25°C", yield: "15-20 quintals/hectare", commonPests: "Pod borer, Aphids", description: "Chickpeas are protein-rich legumes that fix nitrogen in the soil." },
+           
+            { id: 11, name: "Pigeon Pea (Arhar)", hindiName: "अरहर", season: "monsoon", type: "pulse", image: "{{ url_for('static', filename='img/pulses/pigeon pea.jpg') }}", shortInfo: "Arhar is a important kharif pulse crop.", waterReq: "moderate", waterMm: "600-800mm", pricePerQtl: 6500, priceCategory: "high", fertilizerKg: 40, fertilizerCategory: "low", growingDays: 180, daysCategory: "long", scientificName: "Cajanus cajan", soilType: "Well-drained loamy soil", temperature: "25°C - 35°C", yield: "10-15 quintals/hectare", commonPests: "Pod borer, Aphids", description: "Pigeon pea is a perennial legume that provides protein-rich food." },
+
+            { id: 12, name: "Green Gram (Moong)", hindiName: "मूंग", season: "summer", type: "pulse", image: "{{ url_for('static', filename='img/pulses/green gram.jpg') }}", shortInfo: "Moong is a short-duration summer pulse.", waterReq: "low", waterMm: "300-500mm", pricePerQtl: 7500, priceCategory: "high", fertilizerKg: 30, fertilizerCategory: "low", growingDays: 70, daysCategory: "short", scientificName: "Vigna radiata", soilType: "Well-drained loamy soil", temperature: "25°C - 35°C", yield: "8-12 quintals/hectare", commonPests: "Pod borer, Aphids", description: "Green gram is highly nutritious and easy to digest." },
+
+            { id: 13, name: "Black Gram (Urad)", hindiName: "उड़द", season: "monsoon", type: "pulse", image: "{{ url_for('static', filename='img/pulses/black gram.jpg') }}", shortInfo: "Urad is a popular pulse used in many dishes.", waterReq: "low", waterMm: "300-500mm", pricePerQtl: 7000, priceCategory: "high", fertilizerKg: 30, fertilizerCategory: "low", growingDays: 80, daysCategory: "short", scientificName: "Vigna mungo", soilType: "Well-drained loamy soil", temperature: "25°C - 35°C", yield: "8-12 quintals/hectare", commonPests: "Pod borer, Aphids", description: "Black gram is rich in protein and dietary fiber." },
+
+            { id: 14, name: "Lentil (Masoor)", hindiName: "मसूर", season: "winter", type: "pulse", image: "{{ url_for('static', filename='img/pulses/lin.jpg') }}", shortInfo: "Masoor dal is a common winter pulse.", waterReq: "low", waterMm: "350-500mm", pricePerQtl: 6000, priceCategory: "high", fertilizerKg: 30, fertilizerCategory: "low", growingDays: 110, daysCategory: "medium", scientificName: "Lens culinaris", soilType: "Well-drained loamy soil", temperature: "15°C - 25°C", yield: "10-15 quintals/hectare", commonPests: "Pod borer, Aphids", description: "Lentils are rich in protein and cook quickly without soaking." },
+
+            { id: 15, name: "Field Pea", hindiName: "मटर", season: "winter", type: "pulse", image: "{{ url_for('static', filename='img/pulses/field pea.jpg') }}", shortInfo: "Green peas are a winter vegetable and pulse.", waterReq: "moderate", waterMm: "400-600mm", pricePerQtl: 3500, priceCategory: "moderate", fertilizerKg: 40, fertilizerCategory: "low", growingDays: 70, daysCategory: "short", scientificName: "Pisum sativum", soilType: "Well-drained loamy soil", temperature: "13°C - 18°C", yield: "60-80 quintals/hectare", commonPests: "Pod borer, Aphids", description: "Peas are nitrogen-fixing legumes that enrich soil fertility." },
+
+            { id: 16, name: "Cowpea (Lobia)", hindiName: "लोबिया", season: "summer", type: "pulse", image: "{{ url_for('static', filename='img/pulses/cowpea.jpg') }}", shortInfo: "Lobia is a heat-tolerant summer pulse.", waterReq: "low", waterMm: "300-500mm", pricePerQtl: 5500, priceCategory: "high", fertilizerKg: 30, fertilizerCategory: "low", growingDays: 80, daysCategory: "short", scientificName: "Vigna unguiculata", soilType: "Well-drained sandy loam", temperature: "25°C - 35°C", yield: "10-15 quintals/hectare", commonPests: "Pod borer, Aphids", description: "Cowpea is drought-tolerant and excellent for soil health." },
+            
+            // ========== OILSEEDS (7 crops) ==========
+            { id: 17, name: "Groundnut", hindiName: "मूंगफली", season: "summer", type: "oilseed", image: "{{ url_for('static', filename='img/oilseed/groundnut.jpg') }}", shortInfo: "Groundnut is an important oilseed and protein crop.", waterReq: "moderate", waterMm: "500-600mm", pricePerQtl: 5800, priceCategory: "high", fertilizerKg: 80, fertilizerCategory: "moderate", growingDays: 135, daysCategory: "medium", scientificName: "Arachis hypogaea", soilType: "Sandy loam, well-drained", temperature: "25°C - 30°C", yield: "15-20 quintals/hectare", commonPests: "Tikka disease, Aphids", description: "Groundnut is protein-rich and fixes nitrogen in soil." },
+            
+            { id: 18, name: "Mustard", hindiName: "सरसों", season: "winter", type: "oilseed", image: "{{ url_for('static', filename='img/oilseed/mustard.jpg') }}", shortInfo: "Mustard is the main winter oilseed crop.", waterReq: "low", waterMm: "300-400mm", pricePerQtl: 5000, priceCategory: "high", fertilizerKg: 80, fertilizerCategory: "moderate", growingDays: 125, daysCategory: "medium", scientificName: "Brassica juncea", soilType: "Loamy to clay loam", temperature: "10°C - 25°C", yield: "12-18 quintals/hectare", commonPests: "Aphids, Sawfly", description: "Mustard seeds are used for oil extraction and cooking." },
+
+            { id: 19, name: "Sesame (Til)", hindiName: "तिल", season: "monsoon", type: "oilseed", image: "{{ url_for('static', filename='img/oilseed/till.jpg') }}", shortInfo: "Sesame is a drought-tolerant oilseed.", waterReq: "low", waterMm: "250-400mm", pricePerQtl: 9000, priceCategory: "high", fertilizerKg: 40, fertilizerCategory: "low", growingDays: 90, daysCategory: "short", scientificName: "Sesamum indicum", soilType: "Well-drained loamy soil", temperature: "25°C - 35°C", yield: "5-8 quintals/hectare", commonPests: "Leaf spot, Aphids", description: "Sesame seeds are rich in healthy oils and antioxidants." },
+            
+            { id: 20, name: "Sunflower", hindiName: "सूरजमुखी", season: "summer", type: "oilseed", image: "{{ url_for('static', filename='img/oilseed/sunflower.jpg') }}", shortInfo: "Sunflower is a popular summer oilseed.", waterReq: "moderate", waterMm: "500-700mm", pricePerQtl: 5500, priceCategory: "high", fertilizerKg: 80, fertilizerCategory: "moderate", growingDays: 110, daysCategory: "medium", scientificName: "Helianthus annuus", soilType: "Well-drained loamy soil", temperature: "20°C - 30°C", yield: "10-15 quintals/hectare", commonPests: "Sunflower moth, Aphids", description: "Sunflower oil is heart-healthy and widely used for cooking." },
+            
+            { id: 21, name: "Soybean", hindiName: "सोयाबीन", season: "monsoon", type: "oilseed", image: "{{ url_for('static', filename='img/oilseed/soyabean.jpg') }}", shortInfo: "Soybean is both an oilseed and protein crop.", waterReq: "moderate", waterMm: "600-800mm", pricePerQtl: 4000, priceCategory: "moderate", fertilizerKg: 60, fertilizerCategory: "moderate", growingDays: 120, daysCategory: "medium", scientificName: "Glycine max", soilType: "Well-drained loamy soil", temperature: "20°C - 30°C", yield: "15-25 quintals/hectare", commonPests: "Stem borer, Aphids", description: "Soybean is rich in protein and used for oil and animal feed." },
+            
+            { id: 22, name: "Castor", hindiName: "अरंडी", season: "monsoon", type: "oilseed", image: "{{ url_for('static', filename='img/oilseed/castor.jpg') }}", shortInfo: "Castor is an industrial oilseed crop.", waterReq: "low", waterMm: "350-500mm", pricePerQtl: 4800, priceCategory: "moderate", fertilizerKg: 60, fertilizerCategory: "moderate", growingDays: 180, daysCategory: "long", scientificName: "Ricinus communis", soilType: "Well-drained loamy soil", temperature: "20°C - 35°C", yield: "10-15 quintals/hectare", commonPests: "Castor semi-looper, Aphids", description: "Castor oil is used in lubricants, paints, and medicines." },
+            
+            { id: 23, name: "Linseed (Flaxseed)", hindiName: "अलसी", season: "winter", type: "oilseed", image: "{{ url_for('static', filename='img/oilseed/linseed.jpg') }}", shortInfo: "Flaxseed is a healthy winter oilseed.", waterReq: "low", waterMm: "300-450mm", pricePerQtl: 5500, priceCategory: "high", fertilizerKg: 40, fertilizerCategory: "low", growingDays: 140, daysCategory: "medium", scientificName: "Linum usitatissimum", soilType: "Well-drained loamy soil", temperature: "15°C - 25°C", yield: "8-12 quintals/hectare", commonPests: "Aphids, Rust", description: "Flaxseed is rich in omega-3 fatty acids and fiber." },
+            
+            // ========== VEGETABLES (15 crops) ==========
+
+            { id: 24, name: "Potato", hindiName: "आलू", season: "winter", type: "vegetable", image: "{{ url_for('static', filename='img/vegetables/patato.jpg') }}", shortInfo: "Potato is the most important winter vegetable.", waterReq: "moderate", waterMm: "350-500mm", pricePerQtl: 1200, priceCategory: "low", fertilizerKg: 150, fertilizerCategory: "high", growingDays: 105, daysCategory: "medium", scientificName: "Solanum tuberosum", soilType: "Well-drained loamy soil", temperature: "15°C - 20°C", yield: "200-300 quintals/hectare", commonPests: "Late blight, Aphids", description: "Potato is rich in carbohydrates and vitamin C." },
+
+            { id: 25, name: "Onion", hindiName: "प्याज", season: "winter", type: "vegetable", image: "{{ url_for('static', filename='img/vegetables/onion.jpg') }}", shortInfo: "Onion is a essential kitchen vegetable.", waterReq: "moderate", waterMm: "400-600mm", pricePerQtl: 1800, priceCategory: "low", fertilizerKg: 100, fertilizerCategory: "high", growingDays: 120, daysCategory: "medium", scientificName: "Allium cepa", soilType: "Well-drained loamy soil", temperature: "13°C - 25°C", yield: "200-300 quintals/hectare", commonPests: "Thrips, Maggots", description: "Onions are used in almost every Indian dish." },
+
+            { id: 26, name: "Tomato", hindiName: "टमाटर", season: "year-round", type: "vegetable", image: "{{ url_for('static', filename='img/vegetables/tomato.jpg') }}", shortInfo: "Tomato is a year-round vegetable crop.", waterReq: "moderate", waterMm: "500-700mm", pricePerQtl: 2500, priceCategory: "moderate", fertilizerKg: 120, fertilizerCategory: "high", growingDays: 75, daysCategory: "short", scientificName: "Solanum lycopersicum", soilType: "Well-drained loamy soil", temperature: "20°C - 25°C", yield: "250-400 quintals/hectare", commonPests: "Fruit borer, Aphids", description: "Tomatoes are rich in vitamin C and lycopene." },
+
+            { id: 27, name: "Brinjal (Eggplant)", hindiName: "बैंगन", season: "year-round", type: "vegetable", image: "{{ url_for('static', filename='img/vegetables/brinjal.jpg') }}", shortInfo: "Brinjal is a popular year-round vegetable.", waterReq: "moderate", waterMm: "400-600mm", pricePerQtl: 2000, priceCategory: "moderate", fertilizerKg: 100, fertilizerCategory: "high", growingDays: 90, daysCategory: "short", scientificName: "Solanum melongena", soilType: "Well-drained loamy soil", temperature: "20°C - 30°C", yield: "200-350 quintals/hectare", commonPests: "Fruit borer, Shoot borer", description: "Brinjal is versatile and used in many curries." },
+
+            { id: 28, name: "Cauliflower", hindiName: "फूलगोभी", season: "winter", type: "vegetable", image: "{{ url_for('static', filename='img/vegetables/cauliflower.jpg') }}", shortInfo: "Cauliflower is a popular winter vegetable.", waterReq: "moderate", waterMm: "400-600mm", pricePerQtl: 2200, priceCategory: "moderate", fertilizerKg: 120, fertilizerCategory: "high", growingDays: 80, daysCategory: "short", scientificName: "Brassica oleracea", soilType: "Well-drained loamy soil", temperature: "15°C - 20°C", yield: "200-300 quintals/hectare", commonPests: "Aphids, Cabbage worm", description: "Cauliflower is rich in vitamin C and fiber." },
+
+            { id: 29, name: "Cabbage", hindiName: "पत्तागोभी", season: "winter", type: "vegetable", image: "{{ url_for('static', filename='img/vegetables/cabbage.jpg') }}", shortInfo: "Cabbage is a leafy winter vegetable.", waterReq: "moderate", waterMm: "400-600mm", pricePerQtl: 1500, priceCategory: "low", fertilizerKg: 100, fertilizerCategory: "high", growingDays: 90, daysCategory: "short", scientificName: "Brassica oleracea", soilType: "Well-drained loamy soil", temperature: "15°C - 20°C", yield: "250-400 quintals/hectare", commonPests: "Aphids, Cabbage worm", description: "Cabbage is rich in vitamins K and C." },
+
+            { id: 30, name: "Ladyfinger (Okra)", hindiName: "भिंडी", season: "summer", type: "vegetable", image: "{{ url_for('static', filename='img/vegetables/ladyfinger.jpg') }}", shortInfo: "Bhindi is a popular summer vegetable.", waterReq: "moderate", waterMm: "400-600mm", pricePerQtl: 3000, priceCategory: "moderate", fertilizerKg: 80, fertilizerCategory: "moderate", growingDays: 55, daysCategory: "short", scientificName: "Abelmoschus esculentus", soilType: "Well-drained loamy soil", temperature: "25°C - 35°C", yield: "80-120 quintals/hectare", commonPests: "Shoot borer, Aphids", description: "Okra is rich in fiber and vitamins." },
+
+            { id: 31, name: "Bitter Gourd", hindiName: "करेला", season: "summer", type: "vegetable", image: "{{ url_for('static', filename='img/vegetables/bitter.jpg') }}", shortInfo: "Karela is a bitter summer vegetable.", waterReq: "moderate", waterMm: "400-600mm", pricePerQtl: 3500, priceCategory: "moderate", fertilizerKg: 60, fertilizerCategory: "moderate", growingDays: 60, daysCategory: "short", scientificName: "Momordica charantia", soilType: "Well-drained loamy soil", temperature: "25°C - 30°C", yield: "80-120 quintals/hectare", commonPests: "Fruit fly, Aphids", description: "Bitter gourd is known for its blood sugar regulating properties." },
+
+            { id: 32, name: "Bottle Gourd", hindiName: "लौकी", season: "summer", type: "vegetable", image: "{{ url_for('static', filename='img/vegetables/bottle.jpg') }}", shortInfo: "Lauki is a hydrating summer vegetable.", waterReq: "moderate", waterMm: "400-600mm", pricePerQtl: 1200, priceCategory: "low", fertilizerKg: 60, fertilizerCategory: "moderate", growingDays: 70, daysCategory: "short", scientificName: "Lagenaria siceraria", soilType: "Well-drained loamy soil", temperature: "25°C - 35°C", yield: "200-300 quintals/hectare", commonPests: "Fruit fly, Aphids", description: "Bottle gourd is low in calories and high in water content." },
+
+            { id: 33, name: "Pumpkin", hindiName: "कद्दू", season: "summer", type: "vegetable", image: "{{ url_for('static', filename='img/vegetables/pumpkin.jpg') }}", shortInfo: "Pumpkin is a nutritious summer vegetable.", waterReq: "moderate", waterMm: "400-600mm", pricePerQtl: 1500, priceCategory: "low", fertilizerKg: 60, fertilizerCategory: "moderate", growingDays: 100, daysCategory: "medium", scientificName: "Cucurbita pepo", soilType: "Well-drained loamy soil", temperature: "20°C - 30°C", yield: "250-400 quintals/hectare", commonPests: "Fruit fly, Aphids", description: "Pumpkin is rich in vitamin A and antioxidants." },
+
+            { id: 34, name: "Spinach", hindiName: "पालक", season: "winter", type: "vegetable", image: "{{ url_for('static', filename='img/vegetables/spinach.jpg') }}", shortInfo: "Palak is a iron-rich leafy vegetable.", waterReq: "moderate", waterMm: "300-500mm", pricePerQtl: 2000, priceCategory: "moderate", fertilizerKg: 50, fertilizerCategory: "moderate", growingDays: 45, daysCategory: "short", scientificName: "Spinacia oleracea", soilType: "Well-drained loamy soil", temperature: "10°C - 20°C", yield: "80-120 quintals/hectare", commonPests: "Aphids, Leaf miner", description: "Spinach is rich in iron, calcium, and vitamins." },
+
+            { id: 35, name: "Coriander", hindiName: "धनिया", season: "year-round", type: "vegetable", image: "{{ url_for('static', filename='img/vegetables/dhan.jpg') }}", shortInfo: "Coriander is a essential herb in Indian cooking.", waterReq: "moderate", waterMm: "300-500mm", pricePerQtl: 4000, priceCategory: "moderate", fertilizerKg: 40, fertilizerCategory: "low", growingDays: 40, daysCategory: "short", scientificName: "Coriandrum sativum", soilType: "Well-drained loamy soil", temperature: "15°C - 25°C", yield: "40-60 quintals/hectare", commonPests: "Aphids", description: "Coriander leaves and seeds are widely used as spice." },
+
+            { id: 36, name: "Chili (Green/Red)", hindiName: "मिर्च", season: "year-round", type: "vegetable", image: "{{ url_for('static', filename='img/vegetables/chili.jpg') }}", shortInfo: "Mirch is essential for adding spice to food.", waterReq: "moderate", waterMm: "400-600mm", pricePerQtl: 5000, priceCategory: "high", fertilizerKg: 80, fertilizerCategory: "moderate", growingDays: 90, daysCategory: "short", scientificName: "Capsicum annuum", soilType: "Well-drained loamy soil", temperature: "20°C - 30°C", yield: "80-120 quintals/hectare", commonPests: "Aphids, Thrips", description: "Chilies are rich in vitamin C and capsaicin." },
+
+            { id: 37, name: "Carrot", hindiName: "गाजर", season: "winter", type: "vegetable", image: "{{ url_for('static', filename='img/vegetables/carrot.jpg') }}", shortInfo: "Gajar is a sweet winter root vegetable.", waterReq: "moderate", waterMm: "350-500mm", pricePerQtl: 1800, priceCategory: "low", fertilizerKg: 60, fertilizerCategory: "moderate", growingDays: 90, daysCategory: "short", scientificName: "Daucus carota", soilType: "Well-drained sandy loam", temperature: "15°C - 20°C", yield: "250-400 quintals/hectare", commonPests: "Aphids, Leaf blight", description: "Carrots are rich in beta-carotene and vitamin A." },
+
+            { id: 38, name: "Cucumber", hindiName: "खीरा", season: "summer", type: "vegetable", image: "{{ url_for('static', filename='img/vegetables/cucumber.jpg') }}", shortInfo: "Kheera is a refreshing summer vegetable.", waterReq: "high", waterMm: "600-800mm", pricePerQtl: 2500, priceCategory: "moderate", fertilizerKg: 60, fertilizerCategory: "moderate", growingDays: 55, daysCategory: "short", scientificName: "Cucumis sativus", soilType: "Well-drained loamy soil", temperature: "20°C - 30°C", yield: "200-300 quintals/hectare", commonPests: "Fruit fly, Aphids", description: "Cucumber is hydrating and low in calories." },
+            
+            // ========== FRUITS (12 crops) ==========
+
+            { id: 39, name: "Mango", hindiName: "आम", season: "summer", type: "fruit", image: "{{ url_for('static', filename='img/fruits/mango.jpg') }}", shortInfo: "Mango is the king of fruits in India.", waterReq: "low", waterMm: "300-500mm", pricePerQtl: 4000, priceCategory: "moderate", fertilizerKg: 800, fertilizerCategory: "high", growingDays: 1095, daysCategory: "long", scientificName: "Mangifera indica", soilType: "Well-drained deep loamy soil", temperature: "24°C - 30°C", yield: "10-20 tonnes/hectare", commonPests: "Mango hopper, Mealybugs", description: "India is the largest producer of mangoes worldwide." },
+
+            { id: 40, name: "Banana", hindiName: "केला", season: "year-round", type: "fruit", image: "{{ url_for('static', filename='img/fruits/banana.jpg') }}", shortInfo: "Banana is a year-round fruit crop.", waterReq: "high", waterMm: "1200-1500mm", pricePerQtl: 2500, priceCategory: "moderate", fertilizerKg: 300, fertilizerCategory: "high", growingDays: 365, daysCategory: "long", scientificName: "Musa paradisiaca", soilType: "Well-drained deep loamy soil", temperature: "25°C - 30°C", yield: "40-50 tonnes/hectare", commonPests: "Banana weevil, Aphids", description: "Bananas are rich in potassium and vitamin B6." },
+
+            { id: 41, name: "Guava", hindiName: "अमरूद", season: "year-round", type: "fruit", image: "{{ url_for('static', filename='img/fruits/guava.jpg') }}", shortInfo: "Guava is a vitamin C-rich fruit.", waterReq: "low", waterMm: "300-500mm", pricePerQtl: 3500, priceCategory: "moderate", fertilizerKg: 500, fertilizerCategory: "high", growingDays: 730, daysCategory: "long", scientificName: "Psidium guajava", soilType: "Well-drained loamy soil", temperature: "20°C - 30°C", yield: "15-25 tonnes/hectare", commonPests: "Fruit fly, Aphids", description: "Guava is rich in vitamin C and dietary fiber." },
+
+            { id: 42, name: "Papaya", hindiName: "पपीता", season: "year-round", type: "fruit", image: "{{ url_for('static', filename='img/fruits/papaya.jpg') }}", shortInfo: "Papaya is a nutritious year-round fruit.", waterReq: "moderate", waterMm: "500-800mm", pricePerQtl: 3000, priceCategory: "moderate", fertilizerKg: 400, fertilizerCategory: "high", growingDays: 270, daysCategory: "long", scientificName: "Carica papaya", soilType: "Well-drained loamy soil", temperature: "22°C - 30°C", yield: "50-80 tonnes/hectare", commonPests: "Papaya mealybug, Aphids", description: "Papaya contains papain enzyme that aids digestion." },
+
+            { id: 43, name: "Pomegranate", hindiName: "अनार", season: "year-round", type: "fruit", image: "{{ url_for('static', filename='img/fruits/promo1.jpg') }}", shortInfo: "Anar is a antioxidant-rich fruit.", waterReq: "low", waterMm: "300-500mm", pricePerQtl: 8000, priceCategory: "high", fertilizerKg: 600, fertilizerCategory: "high", growingDays: 730, daysCategory: "long", scientificName: "Punica granatum", soilType: "Well-drained loamy soil", temperature: "25°C - 35°C", yield: "15-20 tonnes/hectare", commonPests: "Aphids, Fruit borer", description: "Pomegranate is rich in antioxidants and vitamin C." },
+
+            { id: 44, name: "Orange", hindiName: "संतरा", season: "winter", type: "fruit", image: "{{ url_for('static', filename='img/fruits/orange1.jpg') }}", shortInfo: "Santra is a vitamin C-rich citrus fruit.", waterReq: "moderate", waterMm: "600-900mm", pricePerQtl: 5000, priceCategory: "high", fertilizerKg: 500, fertilizerCategory: "high", growingDays: 730, daysCategory: "long", scientificName: "Citrus sinensis", soilType: "Well-drained loamy soil", temperature: "15°C - 30°C", yield: "20-30 tonnes/hectare", commonPests: "Citrus borer, Aphids", description: "Oranges are an excellent source of vitamin C." },
+
+            { id: 45, name: "Lemon", hindiName: "नींबू", season: "year-round", type: "fruit", image: "{{ url_for('static', filename='img/fruits/lemon.jpg') }}", shortInfo: "Nimbu is essential in Indian cuisine.", waterReq: "moderate", waterMm: "500-800mm", pricePerQtl: 6000, priceCategory: "high", fertilizerKg: 400, fertilizerCategory: "high", growingDays: 365, daysCategory: "long", scientificName: "Citrus limon", soilType: "Well-drained loamy soil", temperature: "20°C - 30°C", yield: "15-25 tonnes/hectare", commonPests: "Citrus borer, Aphids", description: "Lemons are rich in vitamin C and citric acid." },
+
+            { id: 46, name: "Grapes", hindiName: "अंगूर", season: "summer", type: "fruit", image: "{{ url_for('static', filename='img/fruits/grapes1.jpg') }}", shortInfo: "Angoor is a sweet summer fruit.", waterReq: "moderate", waterMm: "500-700mm", pricePerQtl: 10000, priceCategory: "very_high", fertilizerKg: 400, fertilizerCategory: "high", growingDays: 730, daysCategory: "long", scientificName: "Vitis vinifera", soilType: "Well-drained loamy soil", temperature: "15°C - 35°C", yield: "20-30 tonnes/hectare", commonPests: "Grapevine beetle, Aphids", description: "Grapes are rich in antioxidants and resveratrol." },
+
+            { id: 47, name: "Watermelon", hindiName: "तरबूज", season: "summer", type: "fruit", image: "{{ url_for('static', filename='img/fruits/watermelon.jpg') }}", shortInfo: "Tarbooj is a hydrating summer fruit.", waterReq: "moderate", waterMm: "400-600mm", pricePerQtl: 2000, priceCategory: "moderate", fertilizerKg: 80, fertilizerCategory: "moderate", growingDays: 90, daysCategory: "short", scientificName: "Citrullus lanatus", soilType: "Sandy loam, well-drained", temperature: "25°C - 35°C", yield: "25-30 tonnes/hectare", commonPests: "Aphids, Fruit flies", description: "Watermelon is composed of 92% water and rich in lycopene." },
+
+            { id: 48, name: "Muskmelon", hindiName: "खरबूजा", season: "summer", type: "fruit", image: "{{ url_for('static', filename='img/fruits/muskmelon.jpg') }}", shortInfo: "Kharbooja is a sweet summer melon.", waterReq: "moderate", waterMm: "400-600mm", pricePerQtl: 2500, priceCategory: "moderate", fertilizerKg: 80, fertilizerCategory: "moderate", growingDays: 85, daysCategory: "short", scientificName: "Cucumis melo", soilType: "Sandy loam", temperature: "25°C - 35°C", yield: "20-25 tonnes/hectare", commonPests: "Fruit fly, Aphids", description: "Muskmelon is rich in vitamins A and C." },
+
+            { id: 49, name: "Sapota (Chikoo)", hindiName: "चीकू", season: "year-round", type: "fruit", image: "{{ url_for('static', filename='img/fruits/sapota.jpg') }}", shortInfo: "Chikoo is a sweet year-round fruit.", waterReq: "moderate", waterMm: "500-800mm", pricePerQtl: 4000, priceCategory: "moderate", fertilizerKg: 500, fertilizerCategory: "high", growingDays: 730, daysCategory: "long", scientificName: "Manilkara zapota", soilType: "Well-drained loamy soil", temperature: "20°C - 35°C", yield: "20-30 tonnes/hectare", commonPests: "Aphids, Mealybugs", description: "Sapota is rich in dietary fiber and vitamins." },
+            
+            { id: 50, name: "Coconut", hindiName: "नारियल", season: "year-round", type: "fruit", image: "{{ url_for('static', filename='img/fruits/coconut.jpg') }}", shortInfo: "Nariyal is a versatile tropical fruit.", waterReq: "high", waterMm: "1500-2500mm", pricePerQtl: 3500, priceCategory: "moderate", fertilizerKg: 500, fertilizerCategory: "high", growingDays: 1825, daysCategory: "long", scientificName: "Cocos nucifera", soilType: "Sandy loam, well-drained", temperature: "25°C - 35°C", yield: "10,000-15,000 nuts/hectare", commonPests: "Coconut mite, Rhinoceros beetle", description: "Coconut provides water, milk, oil, and fiber." },
+            
+            // ========== CASH CROPS (7 crops) ==========
+
+            { id: 51, name: "Cotton", hindiName: "कपास", season: "monsoon", type: "cash", image: "{{ url_for('static', filename='img/cash crops/cotton.jpg') }}", shortInfo: "Cotton is a major cash crop of India.", waterReq: "moderate", waterMm: "500-800mm", pricePerQtl: 6000, priceCategory: "high", fertilizerKg: 100, fertilizerCategory: "high", growingDays: 165, daysCategory: "long", scientificName: "Gossypium", soilType: "Black cotton soil", temperature: "25°C - 35°C", yield: "5-8 quintals/hectare", commonPests: "Bollworm, Aphids", description: "India is one of the largest cotton producers in the world." },
+
+            { id: 52, name: "Sugarcane", hindiName: "गन्ना", season: "year-round", type: "cash", image: "{{ url_for('static', filename='img/cash crops/sugarcane.jpg') }}", shortInfo: "Sugarcane is the main source of sugar.", waterReq: "very_high", waterMm: "1500-2500mm", pricePerQtl: 380, priceCategory: "low", fertilizerKg: 250, fertilizerCategory: "high", growingDays: 420, daysCategory: "long", scientificName: "Saccharum officinarum", soilType: "Deep loamy soil", temperature: "20°C - 35°C", yield: "700-900 quintals/hectare", commonPests: "Stem borer, Pyrilla", description: "Sugarcane is the primary source of sugar production." },
+
+            { id: 53, name: "Turmeric", hindiName: "हल्दी", season: "monsoon", type: "spice", image: "{{ url_for('static', filename='img/cash crops/turmeric.jpg') }}", shortInfo: "Haldi is a golden spice with medicinal properties.", waterReq: "high", waterMm: "1000-1500mm", pricePerQtl: 10000, priceCategory: "very_high", fertilizerKg: 110, fertilizerCategory: "high", growingDays: 240, daysCategory: "long", scientificName: "Curcuma longa", soilType: "Well-drained loamy soil", temperature: "20°C - 30°C", yield: "20-25 quintals/hectare", commonPests: "Rhizome fly, Leaf spot", description: "Turmeric contains curcumin with anti-inflammatory properties." },
+            
+            { id: 54, name: "Ginger", hindiName: "अदरक", season: "monsoon", type: "spice", image: "{{ url_for('static', filename='img/cash crops/ginger.jpg') }}", shortInfo: "Adrak is essential in Indian cooking.", waterReq: "high", waterMm: "1000-1500mm", pricePerQtl: 12000, priceCategory: "very_high", fertilizerKg: 100, fertilizerCategory: "high", growingDays: 240, daysCategory: "long", scientificName: "Zingiber officinale", soilType: "Well-drained loamy soil", temperature: "20°C - 30°C", yield: "15-20 quintals/hectare", commonPests: "Rhizome fly, Nematodes", description: "Ginger aids digestion and has anti-inflammatory effects." },
+
+            { id: 55, name: "Tea", hindiName: "चाय", season: "year-round", type: "cash", image: "{{ url_for('static', filename='img/cash crops/tea.jpg') }}", shortInfo: "Tea is a major beverage crop of India.", waterReq: "high", waterMm: "1200-2000mm", pricePerQtl: 15000, priceCategory: "very_high", fertilizerKg: 300, fertilizerCategory: "high", growingDays: 1095, daysCategory: "long", scientificName: "Camellia sinensis", soilType: "Well-drained acidic soil", temperature: "15°C - 30°C", yield: "1500-2000 kg/hectare", commonPests: "Tea mosquito bug, Aphids", description: "India is one of the largest tea producers in the world." },
+
+            { id: 56, name: "Coffee", hindiName: "कॉफी", season: "year-round", type: "cash", image: "{{ url_for('static', filename='img/cash crops/coffee2.jpg') }}", shortInfo: "Coffee is grown in hilly regions.", waterReq: "high", waterMm: "1000-2000mm", pricePerQtl: 18000, priceCategory: "very_high", fertilizerKg: 200, fertilizerCategory: "high", growingDays: 1095, daysCategory: "long", scientificName: "Coffea arabica", soilType: "Well-drained loamy soil", temperature: "15°C - 25°C", yield: "800-1200 kg/hectare", commonPests: "Coffee borer, Aphids", description: "Indian coffee is known for its unique flavor." },
+
+            { id: 57, name: "Jute", hindiName: "जूट", season: "monsoon", type: "cash", image: "{{ url_for('static', filename='img/cash crops/jute.jpg') }}", shortInfo: "Jute is a fiber crop used for making bags.", waterReq: "high", waterMm: "1000-1500mm", pricePerQtl: 4500, priceCategory: "moderate", fertilizerKg: 60, fertilizerCategory: "moderate", growingDays: 120, daysCategory: "medium", scientificName: "Corchorus olitorius", soilType: "Alluvial soil", temperature: "24°C - 37°C", yield: "20-25 quintals/hectare", commonPests: "Jute semilooper, Aphids", description: "Jute is an eco-friendly natural fiber crop." },
+            
+            // ========== SPICES (5 crops) ==========
+
+            { id: 58, name: "Cumin (Jeera)", hindiName: "जीरा", season: "winter", type: "spice", image: "{{ url_for('static', filename='img/spices/jeera.jpg') }}", shortInfo: "Jeera is an essential Indian spice.", waterReq: "low", waterMm: "300-400mm", pricePerQtl: 25000, priceCategory: "very_high", fertilizerKg: 40, fertilizerCategory: "low", growingDays: 120, daysCategory: "medium", scientificName: "Cuminum cyminum", soilType: "Well-drained loamy soil", temperature: "20°C - 30°C", yield: "6-8 quintals/hectare", commonPests: "Aphids, Powdery mildew", description: "Cumin seeds aid digestion and add flavor to dishes." },
+
+            { id: 59, name: "Fenugreek (Methi)", hindiName: "मेथी", season: "winter", type: "spice", image: "{{ url_for('static', filename='img/spices/methi.jpg') }}", shortInfo: "Methi is used as spice and vegetable.", waterReq: "low", waterMm: "300-500mm", pricePerQtl: 8000, priceCategory: "high", fertilizerKg: 30, fertilizerCategory: "low", growingDays: 100, daysCategory: "medium", scientificName: "Trigonella foenum-graecum", soilType: "Well-drained loamy soil", temperature: "10°C - 25°C", yield: "8-12 quintals/hectare", commonPests: "Aphids", description: "Fenugreek helps control blood sugar and cholesterol." },
+
+            { id: 60, name: "Fennel (Saunf)", hindiName: "सौंफ", season: "winter", type: "spice", image: "{{ url_for('static', filename='img/spices/soff.jpg') }}", shortInfo: "Saunf is used as mouth freshener and spice.", waterReq: "moderate", waterMm: "400-600mm", pricePerQtl: 15000, priceCategory: "very_high", fertilizerKg: 50, fertilizerCategory: "moderate", growingDays: 180, daysCategory: "long", scientificName: "Foeniculum vulgare", soilType: "Well-drained loamy soil", temperature: "15°C - 25°C", yield: "10-12 quintals/hectare", commonPests: "Aphids", description: "Fennel seeds aid digestion and freshen breath." },
+
+            { id: 61, name: "Black Pepper", hindiName: "काली मिर्च", season: "year-round", type: "spice", image: "{{ url_for('static', filename='img/spices/black peper.jpg') }}", shortInfo: "Kali Mirch is the king of spices.", waterReq: "high", waterMm: "1500-2000mm", pricePerQtl: 50000, priceCategory: "very_high", fertilizerKg: 100, fertilizerCategory: "high", growingDays: 1095, daysCategory: "long", scientificName: "Piper nigrum", soilType: "Well-drained loamy soil", temperature: "20°C - 30°C", yield: "1-2 quintals/hectare", commonPests: "Pepper beetle, Aphids", description: "Black pepper contains piperine that enhances nutrient absorption." },
+
+            { id: 62, name: "Cardamom", hindiName: "इलायची", season: "year-round", type: "spice", image: "{{ url_for('static', filename='img/spices/elaichi.jpg') }}", shortInfo: "Elaichi is used in sweets and chai.", waterReq: "high", waterMm: "1500-2500mm", pricePerQtl: 80000, priceCategory: "very_high", fertilizerKg: 100, fertilizerCategory: "high", growingDays: 1095, daysCategory: "long", scientificName: "Elettaria cardamomum", soilType: "Well-drained loamy soil", temperature: "15°C - 25°C", yield: "1-2 quintals/hectare", commonPests: "Cardamom thrips, Aphids", description: "Cardamom is known as the 'Queen of Spices'." }
+        ];
+
+        // Function to get price category based on value
+        function getPriceCategory(price) {
+            if (price < 2000) return "low";
+            if (price >= 2000 && price < 5000) return "moderate";
+            if (price >= 5000 && price < 10000) return "high";
+            return "very_high";
+        }
+
+        // Function to render crop cards with filters
+        function renderCrops() {
+            // Get filter values
+            const seasonFilter = document.querySelector('.season-tab.active')?.getAttribute('data-season') || 'all';
+            const typeFilter = document.getElementById('filterType').value;
+            const waterFilter = document.getElementById('filterWater').value;
+            const priceFilter = document.getElementById('filterPrice').value;
+            const fertilizerFilter = document.getElementById('filterFertilizer').value;
+            const daysFilter = document.getElementById('filterDays').value;
+            
+            // Apply filters
+            let filteredCrops = cropsData.filter(crop => {
+                // Season filter
+                if (seasonFilter !== 'all' && crop.season !== seasonFilter) return false;
+                
+                // Type filter
+                if (typeFilter !== 'all' && crop.type !== typeFilter) return false;
+                
+                // Water requirement filter
+                if (waterFilter !== 'all' && crop.waterReq !== waterFilter) return false;
+                
+                // Price filter
+                if (priceFilter !== 'all') {
+                    const cropPriceCat = getPriceCategory(crop.pricePerQtl);
+                    if (cropPriceCat !== priceFilter) return false;
+                }
+                
+                // Fertilizer filter
+                if (fertilizerFilter !== 'all' && crop.fertilizerCategory !== fertilizerFilter) return false;
+                
+                // Days filter
+                if (daysFilter !== 'all' && crop.daysCategory !== daysFilter) return false;
+                
+                return true;
+            });
+            
+            // Update results count
+            document.getElementById('cropCount').innerText = filteredCrops.length;
+            
+            const cropsGrid = document.getElementById("cropsGrid");
+            cropsGrid.innerHTML = "";
+            
+            if (filteredCrops.length === 0) {
+                cropsGrid.innerHTML = `
+                    <div class="col-span-full text-center py-12">
+                        <i class="fas fa-leaf text-6xl text-gray-600 mb-4"></i>
+                        <p class="text-gray-400 text-lg">No crops found matching your filters</p>
+                        <button onclick="resetAllFilters()" class="mt-4 bg-green-600 text-white px-6 py-2 rounded-full hover:bg-green-700 transition">Reset Filters</button>
+                    </div>
+                `;
+                return;
+            }
+            
+            filteredCrops.forEach(crop => {
+                const card = document.createElement("div");
+                card.className = "crop-card-item";
+                card.setAttribute("data-aos", "fade-up");
+                
+                // Get season emoji
+                const seasonEmoji = crop.season === 'summer' ? '☀️' : crop.season === 'winter' ? '❄️' : crop.season === 'monsoon' ? '🌧️' : '🔄';
+                
+                // Get water emoji
+                const waterEmoji = crop.waterReq === 'low' ? '💧' : crop.waterReq === 'moderate' ? '💧💧' : crop.waterReq === 'high' ? '💧💧💧' : '💧💧💧💧';
+                
+                card.innerHTML = `
+                    <div class="crop-card" onclick="showCropDetails(${crop.id})">
+                        <img src="${crop.image}" alt="${crop.name}" class="crop-image" onerror="this.src='https://placehold.co/400x300/1f2937/22c55e?text=${crop.name}'">
+                        <div class="p-5">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-xl font-bold text-white">${crop.name}</h3>
+                                <span class="text-lg">${seasonEmoji}</span>
+                            </div>
+                            <p class="text-green-400 text-xs mb-2">${crop.hindiName}</p>
+                            <p class="text-gray-400 text-sm leading-relaxed">${crop.shortInfo.substring(0, 80)}...</p>
+                            <div class="mt-3 flex flex-wrap gap-2">
+                                <span class="text-xs bg-gray-800 px-2 py-1 rounded-full text-green-400">💰 ₹${crop.pricePerQtl}/qtl</span>
+                                <span class="text-xs bg-gray-800 px-2 py-1 rounded-full text-blue-400">${waterEmoji} ${crop.waterMm}</span>
+                                <span class="text-xs bg-gray-800 px-2 py-1 rounded-full text-yellow-400">📅 ${crop.growingDays} days</span>
+                            </div>
+                            <div class="mt-3 flex items-center text-green-500">
+                                <span class="text-sm font-medium">Click for full details →</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                cropsGrid.appendChild(card);
+            });
+            
+            AOS.refresh();
+        }
+        
+        // Function to show crop details in modal
+        function showCropDetails(cropId) {
+            const crop = cropsData.find(c => c.id === cropId);
+            if (!crop) return;
+            
+            const seasonEmoji = crop.season === 'summer' ? '☀️ Summer' : crop.season === 'winter' ? '❄️ Winter' : crop.season === 'monsoon' ? '🌧️ Monsoon/Rainy' : '🔄 Year Round';
+            const waterEmoji = crop.waterReq === 'low' ? '💧 Low' : crop.waterReq === 'moderate' ? '💧💧 Moderate' : crop.waterReq === 'high' ? '💧💧💧 High' : '💧💧💧💧 Very High';
+            const priceEmoji = getPriceCategory(crop.pricePerQtl) === 'low' ? '💰 Low' : getPriceCategory(crop.pricePerQtl) === 'moderate' ? '💰💰 Moderate' : getPriceCategory(crop.pricePerQtl) === 'high' ? '💰💰💰 High' : '💰💰💰💰 Very High';
+            const fertilizerEmoji = crop.fertilizerCategory === 'low' ? '🌱 Low' : crop.fertilizerCategory === 'moderate' ? '🌱🌱 Moderate' : '🌱🌱🌱 High';
+            const daysEmoji = crop.daysCategory === 'short' ? '⏱️ Short (<90 days)' : crop.daysCategory === 'medium' ? '⏱️⏱️ Medium (90-150 days)' : '⏱️⏱️⏱️ Long (>150 days)';
+            
+            const modalBody = document.getElementById("modalBody");
+            modalBody.innerHTML = `
+                <div class="text-center mb-6">
+                    <img src="${crop.image}" alt="${crop.name}" class="w-full h-64 object-cover rounded-xl mb-4" onerror="this.src='https://placehold.co/800x400/1f2937/22c55e?text=${crop.name}'">
+                    <h2 class="text-2xl md:text-3xl font-bold text-white">${crop.name}</h2>
+                    <p class="text-green-400 mt-1">${crop.hindiName}</p>
+                    <p class="text-gray-400 text-sm mt-1">${seasonEmoji}</p>
+                </div>
+                
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-label"><i class="fas fa-microscope mr-1"></i> Scientific Name</div>
+                        <div class="detail-value">${crop.scientificName}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label"><i class="fas fa-calendar-alt mr-1"></i> Growing Time</div>
+                        <div class="detail-value">${crop.growingDays} days (${daysEmoji})</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label"><i class="fas fa-mountain mr-1"></i> Soil Type</div>
+                        <div class="detail-value">${crop.soilType}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label"><i class="fas fa-tint mr-1"></i> Water Requirement</div>
+                        <div class="detail-value">${crop.waterMm} (${waterEmoji})</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label"><i class="fas fa-thermometer-half mr-1"></i> Temperature</div>
+                        <div class="detail-value">${crop.temperature}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label"><i class="fas fa-flask mr-1"></i> Fertilizer (NPK)</div>
+                        <div class="detail-value">${crop.fertilizerKg} kg/hectare (${fertilizerEmoji})</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label"><i class="fas fa-chart-line mr-1"></i> Expected Yield</div>
+                        <div class="detail-value">${crop.yield}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label"><i class="fas fa-rupee-sign mr-1"></i> Market Price</div>
+                        <div class="detail-value">₹${crop.pricePerQtl}/quintal (${priceEmoji})</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label"><i class="fas fa-bug mr-1"></i> Common Pests</div>
+                        <div class="detail-value">${crop.commonPests}</div>
+                    </div>
+                </div>
+                
+                <div class="mt-6 p-4 bg-gray-800 rounded-xl">
+                    <div class="detail-label"><i class="fas fa-info-circle mr-1"></i> Detailed Description</div>
+                    <p class="text-gray-300 mt-2 leading-relaxed">${crop.description}</p>
+                </div>
+                
+                <div class="mt-4 p-4 bg-green-900 bg-opacity-30 rounded-xl">
+                    <div class="detail-label"><i class="fas fa-lightbulb mr-1"></i> Farmer Tip</div>
+                    <p class="text-green-300 mt-1 text-sm">Best grown during ${crop.season === 'summer' ? 'summer season with adequate irrigation' : crop.season === 'winter' ? 'winter season with cool temperatures' : crop.season === 'monsoon' ? 'monsoon season with proper drainage' : 'any season with proper care'}. Requires ${crop.waterMm} of water and ${crop.soilType} for optimal yield.</p>
+                </div>
+            `;
+            
+            document.getElementById("cropModal").classList.add("active");
+            document.body.style.overflow = "hidden";
+        }
+        
+        // Reset all filters
+        function resetAllFilters() {
+            document.getElementById('filterType').value = 'all';
+            document.getElementById('filterWater').value = 'all';
+            document.getElementById('filterPrice').value = 'all';
+            document.getElementById('filterFertilizer').value = 'all';
+            document.getElementById('filterDays').value = 'all';
+            
+            // Reset season tabs
+            document.querySelectorAll('.season-tab').forEach(tab => {
+                if (tab.getAttribute('data-season') === 'all') {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+            
+            renderCrops();
+        }
+        
+        // Close modal function
+        function closeModal() {
+            document.getElementById("cropModal").classList.remove("active");
+            document.body.style.overflow = "auto";
+        }
+        
+        // Event listeners
+        document.addEventListener("DOMContentLoaded", function() {
+            renderCrops();
+            AOS.init({ duration: 800, once: true, offset: 100 });
+            
+            // Add event listeners to filters
+            const filterElements = ['filterType', 'filterWater', 'filterPrice', 'filterFertilizer', 'filterDays'];
+            filterElements.forEach(id => {
+                document.getElementById(id).addEventListener('change', renderCrops);
+            });
+            
+            // Season tab listeners
+            document.querySelectorAll(".season-tab").forEach(tab => {
+                tab.addEventListener("click", function() {
+                    document.querySelectorAll(".season-tab").forEach(t => t.classList.remove("active"));
+                    this.classList.add("active");
+                    renderCrops();
+                });
+            });
+            
+            // Reset button
+            document.getElementById('resetFilters').addEventListener('click', resetAllFilters);
+            
+            // Modal close on escape
+            document.addEventListener("keydown", function(e) {
+                if (e.key === "Escape") closeModal();
+            });
+            
+            // Modal close on outside click
+            document.getElementById("cropModal").addEventListener("click", function(e) {
+                if (e.target === this) closeModal();
+            });
+        });
+        
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        }
+    </script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+</body>
+</html>

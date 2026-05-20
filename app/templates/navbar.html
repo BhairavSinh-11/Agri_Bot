@@ -1,0 +1,99 @@
+    <!-- Navigation Bar -->
+
+    
+     <nav class="bg-gray-900/80 backdrop-blur-md shadow-lg sticky top-0 z-50">
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-seedling text-3xl text-green-500"></i>
+                    <span class="font-bold text-2xl text-white">Agri<span class="text-green-500">Bot</span></span>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="/" class="{% if active=='home' %}text-green-500 transition font-medium{% else %}text-gray-300 hover:text-green-500 transition font-medium{% endif %}">Home</a>
+
+                    <a href="/crops" class="{% if active=='crops' %}text-green-500 transition font-medium{% else %}text-gray-300 hover:text-green-500 transition font-medium{% endif %}">Crops</a>
+
+                    <a href="/agrimarket" class="{% if active=='agrimarket' %}text-green-500 transition font-medium{% else %}text-gray-300 hover:text-green-500 transition font-medium{% endif %}">Marketplace</a>
+
+                    <a href="/AI" class="{% if active=='AI' %}text-green-500 transition font-medium{% else %}text-gray-300 hover:text-green-500 transition font-medium{% endif %}">AI Assistant</a>
+
+                    <a href="/about" class="{% if active=='about' %}text-green-500 transition font-medium{% else %}text-gray-300 hover:text-green-500 transition font-medium{% endif %}">About</a>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <div class="hidden md:flex items-center space-x-4">
+
+                        {% if session.get('user') %}
+                        
+                          <!-- Profile Dropdown -->
+    <div class="relative group">
+        <div class="flex items-center space-x-2 bg-gray-800 px-4 py-2 rounded-full cursor-pointer border border-gray-700 hover:border-green-500 transition">
+            <i class="fas fa-user-circle text-green-500 text-xl"></i>
+            <span class="text-white">{{ session.get('user')['name'] }}</span>
+            <i class="fas fa-chevron-down text-gray-400 text-sm ml-1"></i>
+        </div>
+        
+        <!-- Dropdown Menu -->
+        <div class="absolute right-0 mt-2 w-48 bg-gray-800 border border-gray-700 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+            <div class="py-2">
+                <a onclick="openProfileModal()" class="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-green-500 transition cursor-pointer">
+                    <i class="fas fa-user w-5 mr-2"></i>
+                    Profile
+                </a>
+                <hr class="border-gray-700 my-2">
+                <a href="/logout" class="flex items-center px-4 py-2 text-red-400 hover:bg-gray-700 hover:text-red-500 transition">
+                    <i class="fas fa-sign-out-alt w-5 mr-2"></i>
+                    Logout
+                </a>
+            </div>
+        </div>
+    </div>
+{% else %}
+    <a href="/login" class="text-gray-300 hover:text-green-500 transition font-medium">Login</a>
+    <a href="/register" class="bg-green-600 text-white px-6 py-2 rounded-full hover:bg-green-700 transition font-medium shadow-md">Register</a>
+{% endif %}
+                    </div>
+
+
+                    <!-- mobile menu button -->
+                    
+                    <button id="mobile-menu-btn" class="md:hidden text-gray-300 hover:text-green-500" onclick="toggleMobileMenu()">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="mobile-menu" class="hidden md:hidden border-t border-gray-700">
+            <div class="px-4 py-3 space-y-3">
+                <a href="/" class="{% if active=='home' %}block text-green-500 py-2{% else %}block text-gray-300 hover:text-green-500 py-2{% endif %}">Home</a>
+
+                <a href="/crops" class="{% if active=='crops' %}block text-green-500 py-2{% else %}block text-gray-300 hover:text-green-500 py-2{% endif %}">Crops</a>
+                
+                <a href="/agrimarket" class="{% if active=='agrimarket' %}block text-green-500 py-2{% else %}block text-gray-300 hover:text-green-500 py-2{% endif %}">Marketplace</a>
+                
+                <a href="/AI" class="{% if active=='AI' %}block text-green-500 py-2{% else %}block text-gray-300 hover:text-green-500 py-2{% endif %}">AI Assistant</a>
+                
+                <a href="/about" class="{% if active=='about' %}block text-green-500 py-2{% else %}block text-gray-300 hover:text-green-500 py-2{% endif %}">About</a>
+                <div class="pt-2 space-y-2">
+
+                    {% if session.get('user') %}
+    <div class="pt-2 space-y-2">
+        <a onclick="openProfileModal()" class="flex items-center text-green-500 hover:text-green-500 py-2 cursor-pointer">
+            <i class="fas fa-user w-5 mr-2"></i>
+            {{ session.get('user')['name'] }}
+        </a>
+        <a href="/logout" class="block text-center bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-700">Logout</a>
+    </div>
+{% else %}
+    <div class="pt-2 space-y-2">
+        <a href="/login" class="block text-gray-300 hover:text-green-500 py-2">Login</a>
+        <a href="/register" class="block text-center bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700">Register</a>
+    </div>
+{% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>

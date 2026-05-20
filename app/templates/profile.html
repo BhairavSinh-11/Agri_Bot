@@ -1,0 +1,213 @@
+
+
+    <!-- Add Profile Modal Here - BEFORE closing body tag -->
+    <!-- Profile Modal -->
+    <div id="profileModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden overflow-y-auto">
+        <div class="min-h-screen px-4 flex items-center justify-center">
+            <div class="bg-gray-900 rounded-2xl shadow-2xl max-w-md w-full mx-auto border border-gray-700">
+                <!-- Modal Header -->
+                <div class="flex justify-between items-center p-6 border-b border-gray-700">
+                    <h2 class="text-2xl font-bold text-white">
+                        <i class="fas fa-user-circle text-green-500 mr-2"></i>
+                        Profile Settings
+                    </h2>
+                    <button onclick="closeProfileModal()" class="text-gray-400 hover:text-white transition">
+                        <i class="fas fa-times text-2xl"></i>
+                    </button>
+                </div>
+                
+                <!-- Modal Body -->
+                <div class="p-6 space-y-6">
+                    <!-- Profile Picture Section -->
+                    <div class="flex justify-center">
+                        <div class="relative">
+                            <div class="w-24 h-24 bg-gray-800 rounded-full flex items-center justify-center border-2 border-green-500">
+                                <i class="fas fa-user text-5xl text-green-500"></i>
+                            </div>
+                            <button class="absolute bottom-0 right-0 bg-green-600 rounded-full p-2 hover:bg-green-700 transition">
+                                <i class="fas fa-camera text-white text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Profile Form -->
+                    <form id="profileForm" class="space-y-4">
+                        <!-- Display Name -->
+                        <div>
+                            <label class="block text-gray-300 text-sm font-medium mb-2">
+                                <i class="fas fa-user text-green-500 mr-1"></i>
+                                Display Name
+                            </label>
+                            <input type="text" id="displayName" value="{{ session.get('user')['name'] }}" 
+                                   class="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-green-500 transition">
+                        </div>
+                        
+                        <!-- Username -->
+                        <div>
+                            <label class="block text-gray-300 text-sm font-medium mb-2">
+                                <i class="fas fa-at text-green-500 mr-1"></i>
+                                Username
+                            </label>
+                            <input type="text" id="username" value="{{ session.get('user')['username'] }}" 
+                                   class="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-green-500 transition">
+                        </div>
+                        
+                        <!-- Email (Read-only) -->
+                        <div>
+                            <label class="block text-gray-300 text-sm font-medium mb-2">
+                                <i class="fas fa-envelope text-green-500 mr-1"></i>
+                                Email
+                            </label>
+                            <input type="email" id="email" value="{{ session.get('user')['email'] }}" readonly
+                                   class="w-full px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg text-gray-400 cursor-not-allowed">
+                            <p class="text-xs text-gray-500 mt-1">Email cannot be changed</p>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="flex flex-col space-y-3 pt-4">
+                            <button type="submit" class="w-full bg-green-600 text-white px-4 py-3 rounded-lg hover:bg-green-700 transition font-medium">
+                                <i class="fas fa-save mr-2"></i>
+                                Save Changes
+                            </button>
+                            
+                            <button type="button" onclick="redirectToForgotPassword()" 
+                                    class="w-full bg-gray-800 text-white px-4 py-3 rounded-lg hover:bg-gray-700 transition font-medium border border-gray-700">
+                                <i class="fas fa-key mr-2"></i>
+                                Update Password
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Modal Footer -->
+                <div class="p-6 border-t border-gray-700">
+                    <button onclick="closeProfileModal()" class="w-full text-gray-400 hover:text-white transition">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-4 right-4 bg-gray-900 text-white px-6 py-3 rounded-lg shadow-lg border border-gray-700 transform translate-y-20 opacity-0 transition-all duration-300 z-50 hidden">
+        <span id="toastMessage"></span>
+    </div>
+
+    <!-- Add Profile JavaScript Here - AFTER the existing script but BEFORE closing body -->
+    <script>
+        // Profile Modal Functions
+        function openProfileModal() {
+            document.getElementById('profileModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            fetchUserProfile();
+        }
+
+        function closeProfileModal() {
+            document.getElementById('profileModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('profileModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeProfileModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && !document.getElementById('profileModal').classList.contains('hidden')) {
+                closeProfileModal();
+            }
+        });
+
+        // Fetch user profile data
+        async function fetchUserProfile() {
+            try {
+                const response = await fetch('/api/profile');
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('displayName').value = data.user.name;
+                    document.getElementById('username').value = data.user.username;
+                    document.getElementById('email').value = data.user.email;
+                }
+            } catch (error) {
+                console.error('Error fetching profile:', error);
+                showToast('Failed to load profile data', 'error');
+            }
+        }
+
+        // Handle profile form submission
+        document.getElementById('profileForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                display_name: document.getElementById('displayName').value,
+                username: document.getElementById('username').value
+            };
+            
+            try {
+                const response = await fetch('/api/profile/update', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showToast('Profile updated successfully!', 'success');
+                    setTimeout(() => {
+                        closeProfileModal();
+                        location.reload();
+                    }, 1500);
+                } else {
+                    showToast(data.message || 'Failed to update profile', 'error');
+                }
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                showToast('Failed to update profile', 'error');
+            }
+        });
+
+        // Redirect to forgot password page
+        function redirectToForgotPassword() {
+            window.location.href = '/forgotpass';
+        }
+
+        // Show toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            
+            toastMessage.textContent = message;
+            
+            if (type === 'error') {
+                toast.classList.add('border-red-500');
+            } else {
+                toast.classList.add('border-green-500');
+            }
+            
+            toast.classList.remove('hidden');
+            
+            setTimeout(() => {
+                toast.classList.remove('translate-y-20', 'opacity-0');
+                toast.classList.add('translate-y-0', 'opacity-100');
+            }, 100);
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+                setTimeout(() => {
+                    toast.classList.add('hidden');
+                    toast.classList.remove('border-red-500', 'border-green-500');
+                }, 300);
+            }, 3000);
+        }
+    </script>
+
+    <!-- Existing AOS script -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>

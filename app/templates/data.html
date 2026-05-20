@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - AgriBot</title>
+     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }} "
+          type="image/x-icon">
+   
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #0a0f1a, #111827);
+            color: #f9fafb;
+            font-family: 'Inter', sans-serif;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .data-body {
+            background-image: linear-gradient(135deg, rgba(10, 15, 26, 0.95), rgba(17, 24, 39, 0.95)),
+            url("{{ url_for('static', filename='img/forgot1.jpg') }}");
+
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;}
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            padding: 8px 16px;
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+        }
+
+        .btn-secondary {
+            border: 1px solid #374151;
+            padding: 8px 16px;
+            border-radius: 8px;
+            color: #9ca3af;
+            text-decoration: none;
+        }
+
+        .table-container {
+            background: #1f2937;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #111827;
+            padding: 12px;
+            text-align: left;
+            color: #9ca3af;
+        }
+
+        td {
+            padding: 12px;
+            border-top: 1px solid #374151;
+        }
+
+        tr:hover {
+            background: #374151;
+        }
+
+        .delete-btn {
+            background: #ef4444;
+            padding: 5px 10px;
+            border-radius: 6px;
+            color: white;
+            text-decoration: none;
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .desktop-table {
+                display: none;
+            }
+
+            .profile-card {
+                background: #1f2937;
+                border-radius: 12px;
+                padding: 16px;
+                margin-bottom: 12px;
+            }
+
+            .profile-item {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 8px;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .mobile-cards {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body class="data-body">
+
+<div class="container">
+
+    <!-- Header -->
+    <div class="header">
+        <h2 class="text-2xl font-bold text-green-400">Admin Dashboard</h2>
+
+        <div class="flex gap-2">
+            <a href="{{ url_for('main.home') }}" class="btn-secondary">Home</a>
+            <a href="{{ url_for('main.logout') }}" class="btn-primary">Logout</a>
+        </div>
+    </div>
+
+    <!-- DESKTOP TABLE -->
+    <div class="desktop-table table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Password</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>********</td>
+                    <td>
+                        <a href="{{ url_for('main.delete_profile', id=user.id) }}"
+                           onclick="return confirm('Delete this user?')"
+                           class="delete-btn">
+                           Delete
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mobile-cards">
+    {% for user in users %}
+    <div class="profile-card">
+
+        <div class="profile-item">
+            <span>ID:</span>
+            <span>{{ user.id }}</span>
+        </div>
+
+        <div class="profile-item">
+            <span>Username:</span>
+            <span>{{ user.username }}</span>
+        </div>
+
+        <div class="profile-item">
+            <span>Email:</span>
+            <span>{{ user.email }}</span>
+        </div>
+
+        <div class="profile-item">
+            <span>Password:</span>
+            <span>********</span>
+        </div>
+
+        <div class="profile-item">
+            <a href="{{ url_for('main.delete_profile', id=user.id) }}"
+               class="delete-btn"
+               onclick="return confirm('Delete this user?')">
+               Delete
+            </a>
+        </div>
+
+    </div>
+    {% endfor %}
+</div>
+
+    <!-- EMPTY STATE -->
+    {% if not users %}
+    <div class="text-center mt-10 text-gray-400">
+        <p>No users found</p>
+        <a href="{{ url_for('main.register') }}" class="btn-primary mt-4 inline-block">
+            Add User
+        </a>
+    </div>
+    {% endif %}
+
+</div>
+
+</body>
+</html>

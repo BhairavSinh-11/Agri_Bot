@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>AgriBot - Smart Agriculture Platform</title>
+     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }} "
+          type="image/x-icon">
+   
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --bg-primary: #0a0f1a;
+            --bg-secondary: #111827;
+            --bg-card: #1f2937;
+            --text-primary: #f9fafb;
+            --text-secondary: #d1d5db;
+            --border-color: #374151;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        .login-hero-bg {
+            background-image: linear-gradient(135deg, rgba(10, 15, 26, 0.95), rgba(17, 24, 39, 0.95)),
+            url("{{ url_for('static', filename='img/login1.jpg') }}");
+
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .login-card {
+            background: linear-gradient(135deg, rgba(31, 41, 55, 0.98), rgba(17, 24, 39, 0.98));
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .login-card:hover {
+            border-color: rgba(34, 197, 94, 0.5);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 16px 12px 45px;
+            background-color: rgba(17, 24, 39, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #22c55e;
+            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+            background-color: rgba(31, 41, 55, 0.9);
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #22c55e;
+            font-size: 1.1rem;
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(34, 197, 94, 0.3);
+        }
+
+        .social-btn {
+            background-color: rgba(31, 41, 55, 0.8);
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .social-btn:hover {
+            background-color: rgba(55, 65, 81, 0.9);
+            transform: translateY(-2px);
+            border-color: #22c55e;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .error-message {
+            background-color: rgba(239, 68, 68, 0.1);
+            border-left: 3px solid #ef4444;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .success-message {
+            background-color: rgba(34, 197, 94, 0.1);
+            border-left: 3px solid #22c55e;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .field-error {
+            color: #ef4444;
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            margin-left: 0.5rem;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #4b5563;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6b7280;
+        }
+    </style>
+</head>
+<body class="login-hero-bg">
+
+    <section class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8" data-aos="fade-up" data-aos-duration="1000">
+            
+            <div class="text-center">
+                <div class="flex justify-center mb-4">
+                    <div class="bg-green-600 rounded-full p-3 animate-float">
+                        <i class="fas fa-seedling text-4xl text-white"></i>
+                    </div>
+                </div>
+                <h2 class="text-3xl font-extrabold text-white">Welcome Back</h2>
+                <p class="mt-2 text-sm text-gray-400">Sign in to your AgriBot account</p>
+            </div>
+
+            <div class="login-card rounded-2xl p-8 space-y-6">
+                
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="{% if category == 'success' %}success-message{% else %}error-message{% endif %}">
+                                <i class="fas fa-{% if category == 'success' %}check-circle{% else %}exclamation-circle{% endif %} mr-2"></i>
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <form method="POST" action="{{ url_for('main.login') }}">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        {{ form.username(placeholder="Username", class="w-full") }}
+                        {% if form.username.errors %}
+                            <div class="field-error">
+                                {% for error in form.username.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        {{ form.password(placeholder="Password", class="w-full") }}
+                        {% if form.password.errors %}
+                            <div class="field-error">
+                                {% for error in form.password.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <a href="/forgotpass" class="text-sm text-green-500 hover:text-green-400 transition">
+                            Forgot password?
+                        </a>
+                    </div>
+
+                    <button type="submit" class="login-btn w-full">
+                        <i class="fas fa-sign-in-alt mr-2"></i>
+                        Sign In
+                    </button>
+                </form>
+
+                <div class="relative">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-700"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-2 bg-gray-800 text-gray-400">Or continue with</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-3">
+                    <button class="social-btn" onclick="socialLogin('google')">
+                        <i class="fab fa-google text-red-500"></i>
+                        <span class="text-xs text-gray-300 hidden sm:inline">Google</span>
+                    </button>
+                    <button class="social-btn" onclick="socialLogin('facebook')">
+                        <i class="fab fa-facebook-f text-blue-500"></i>
+                        <span class="text-xs text-gray-300 hidden sm:inline">Facebook</span>
+                    </button>
+                    <button class="social-btn" onclick="socialLogin('github')">
+                        <i class="fab fa-github text-gray-400"></i>
+                        <span class="text-xs text-gray-300 hidden sm:inline">GitHub</span>
+                    </button>
+                </div>
+
+                <p class="text-center text-sm text-gray-400">
+                    Don't have an account?
+                    <a href="{{ url_for('main.register') }}" class="text-green-500 hover:text-green-400 font-semibold transition">
+                        Create an account
+                    </a><br>
+                    <br>
+                    <a href="{{ url_for('main.home') }}" class="text-green-500 hover:text-green-400 font-semibold transition">
+                        BACK TO HOME
+                    </a>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function socialLogin(provider) {
+            console.log(`Logging in with ${provider}`);
+            alert(`Redirecting to ${provider} login...\n\nThis would integrate with ${provider} OAuth in production.`);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            AOS.init({
+                duration: 800,
+                once: true,
+                offset: 100
+            });
+
+            // Password visibility toggle
+            const passwordInput = document.querySelector('input[name="password"]');
+            if (passwordInput) {
+                const togglePassword = document.createElement('i');
+                togglePassword.className = 'fas fa-eye-slash absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-400 hover:text-green-500';
+                togglePassword.style.right = '16px';
+                togglePassword.style.left = 'auto';
+                
+                const parentDiv = passwordInput.parentElement;
+                parentDiv.style.position = 'relative';
+                parentDiv.appendChild(togglePassword);
+                
+                togglePassword.addEventListener('click', function() {
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+                    this.classList.toggle('fa-eye');
+                    this.classList.toggle('fa-eye-slash');
+                });
+            }
+
+            // Add focus effects
+            const inputs = document.querySelectorAll('.input-group input');
+            inputs.forEach(input => {
+                input.addEventListener('focus', () => {
+                    input.parentElement.classList.add('ring-2', 'ring-green-500', 'ring-opacity-50');
+                });
+                input.addEventListener('blur', () => {
+                    input.parentElement.classList.remove('ring-2', 'ring-green-500', 'ring-opacity-50');
+                });
+            });
+        });
+    </script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+</body>
+</html>

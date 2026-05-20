@@ -1,0 +1,50 @@
+# -----------------------------
+# Python and Flask ignores
+# -----------------------------
+
+# Byte-compiled / cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Environment variables
+.env
+
+# SQLite database and instance folder
+*.sqlite3
+instance/
+
+# Flask-specific
+*.db
+*.pid
+
+# Logs
+*.log
+
+# Test / coverage
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+.pytest_cache/
+
+# IDE / Editor
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Build / dist
+dist/
+build/
+*.egg-info/

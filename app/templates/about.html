@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>AgriBot - Smart Agriculture Platform</title>
+
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --bg-primary: #0a0f1a;
+            --bg-secondary: #111827;
+            --bg-card: #1f2937;
+            --text-primary: #f9fafb;
+            --text-secondary: #d1d5db;
+            --border-color: #374151;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        nav, .bg-white, .bg-gray-50, .bg-gray-100 {
+            background-color: var(--bg-secondary) !important;
+        }
+
+        .text-gray-900, .text-gray-800, .text-gray-700 {
+            color: var(--text-primary) !important;
+        }
+
+        .text-gray-600, .text-gray-500 {
+            color: var(--text-secondary) !important;
+        }
+
+        .border-gray-200, .border-gray-100 {
+            border-color: var(--border-color) !important;
+        }
+
+        .card-hover {
+            transition: all 0.3s ease-in-out;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 5px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+
+        .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+    .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: #4b5563;
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+    .dot.active {
+        width: 24px;
+        border-radius: 4px;
+        background-color: #22c55e;
+    }
+
+     .hero-bg {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+                      url("{{ url_for('static', filename='img/image2.jpg') }}");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-attachment: scroll;
+}
+    </style>
+</head>
+<body>
+
+    {% include 'navbar.html' %}
+
+    <!-- Hero Section -->
+    <section class="hero-bg relative  min-h-screen py-0 flex items-center">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center" data-aos="fade-up">
+            <div class="inline-flex items-center gap-2 bg-green-500/10 rounded-full px-4 py-1 mb-6">
+                <i class="fas fa-seedling text-green-500 text-sm"></i>
+                <span class="text-green-400 text-sm font-medium">About AgriBot</span>
+            </div>
+            <h1 class="text-4xl md:text-6xl font-bold text-white mb-6">
+                Empowering Farmers With<br>
+                <span class="text-green-500">AI Technology</span>
+            </h1>
+            <p class="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
+                AgriBot is a smart agriculture Project that combines artificial intelligence, 
+                Crops Information Guidance, Farming Support, and government resources to help farmers make better decisions.
+                <br>
+                <br>
+                **This is only a Demo version for college project. We are planning to add more features in future.**
+            </p>
+        </div>
+    </section>
+
+    <!-- Mission & Vision Section -->
+    <section class="py-16 bg-gray-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-gray-800 rounded-2xl p-8 border border-gray-700 card-hover" data-aos="fade-right">
+                    <div class="w-14 h-14 bg-green-900/50 rounded-2xl flex items-center justify-center mb-5">
+                        <i class="fas fa-bullseye text-2xl text-green-400"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-3">Our Mission</h3>
+                    <p class="text-gray-300 leading-relaxed">
+                       To help farmers with crop guidance, smart farming tools, and modern agricultural solutions.
+                    </p>
+                </div>
+                <div class="bg-gray-800 rounded-2xl p-8 border border-gray-700 card-hover" data-aos="fade-left">
+                    <div class="w-14 h-14 bg-blue-900/50 rounded-2xl flex items-center justify-center mb-5">
+                        <i class="fas fa-eye text-2xl text-blue-400"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-3">Our Vision</h3>
+                    <p class="text-gray-300 leading-relaxed">
+                        To create a future where technology makes farming smarter, easier, and more productive.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem & Solution Section -->
+    <section class="py-16 bg-gray-950">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12" data-aos="fade-up">
+                <span class="text-green-500 font-semibold text-lg">WHY AGRiBOT?</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-white mt-2">Bridging the Gap in Indian Agriculture</h2>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Problem Column -->
+                <div class="bg-red-900/20 rounded-2xl p-8 border border-red-800/30" data-aos="fade-right">
+                    <div class="flex items-center gap-3 mb-5">
+                        <i class="fas fa-exclamation-triangle text-red-400 text-2xl"></i>
+                        <h3 class="text-xl font-bold text-white">The Problem</h3>
+                    </div>
+                    <ul class="space-y-3 text-gray-300">
+                        <li class="flex items-start gap-3"><i class="fas fa-times-circle text-red-400 mt-1"></i> <span>Late disease detection</span></li>
+                        <li class="flex items-start gap-3"><i class="fas fa-times-circle text-red-400 mt-1"></i> <span> Limited farming guidance</span></li>
+                        <li class="flex items-start gap-3"><i class="fas fa-times-circle text-red-400 mt-1"></i> <span>Difficulty accessing market information</span></li>
+                        <li class="flex items-start gap-3"><i class="fas fa-times-circle text-red-400 mt-1"></i> <span>Lack of awareness about government schemes</span></li>
+                    </ul>
+                </div>
+                <!-- Solution Column -->
+                <div class="bg-green-900/20 rounded-2xl p-8 border border-green-800/30" data-aos="fade-left">
+                    <div class="flex items-center gap-3 mb-5">
+                        <i class="fas fa-lightbulb text-green-400 text-2xl"></i>
+                        <h3 class="text-xl font-bold text-white">The Solution</h3>
+                    </div>
+                    <ul class="space-y-3 text-gray-300">
+                        <li class="flex items-start gap-3"><i class="fas fa-check-circle text-green-400 mt-1"></i> <span>AI-powered Chatbot for infomation gathering</span></li>
+                        <li class="flex items-start gap-3"><i class="fas fa-check-circle text-green-400 mt-1"></i> <span>Live crop prices from eNAM & mandis</span></li>
+                        <li class="flex items-start gap-3"><i class="fas fa-check-circle text-green-400 mt-1"></i> <span>Crop and market information</span></li>
+                        <li class="flex items-start gap-3"><i class="fas fa-check-circle text-green-400 mt-1"></i> <span>Government scheme portal with direct links</span></li>
+                        <li class="flex items-start gap-3"><i class="fas fa-check-circle text-green-400 mt-1"></i> <span>24/7 AI chatbot & Kisan Call Center support</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Platform Features / Page Explanation -->
+    <section class="py-16 bg-gray-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12" data-aos="fade-up">
+                <span class="text-green-500 font-semibold text-lg">PLATFORM FEATURES</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-white mt-2">What Each Page Does</h2>
+                <p class="text-gray-400 mt-4 max-w-2xl mx-auto">Complete ecosystem for modern farming needs</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Crop Information Page -->
+                <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 card-hover" data-aos="fade-up" data-aos-delay="100">
+                    <div class="bg-green-900/50 w-12 h-12 rounded-xl flex items-center justify-center mb-4">
+                        <i class="fas fa-leaf text-green-400 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">🌾 Crop Information</h3>
+                    <p class="text-gray-400 text-sm mb-3">Use Case:</p>
+                    <p class="text-gray-300 text-sm mb-3">
+                        Farmers can search for crops based on season, soil type, and region. 
+                        Get detailed growing instructions, fertilizer requirements, and expected yield.
+                    </p>
+                    <div class="pt-3 border-t border-gray-700">
+                        <span class="text-green-500 text-xs">📍 Season-wise recommendations | 📊 Price per quintal | 🌡️ Weather insights</span>
+                    </div>
+                </div>
+
+                <!-- AI Crop Analysis Page -->
+                <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 card-hover" data-aos="fade-up" data-aos-delay="200">
+                    <div class="bg-purple-900/50 w-12 h-12 rounded-xl flex items-center justify-center mb-4">
+                        <i class="fas fa-microchip text-purple-400 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">🤖 AI Crop Analysis</h3>
+                    <p class="text-gray-400 text-sm mb-3">Use Case:</p>
+                    <p class="text-gray-300 text-sm mb-3">
+                        Upload a photo of diseased crop/leaf. Our AI model detects the disease, 
+                        identifies severity, and recommends organic/chemical treatment solutions instantly.
+                    </p>
+                    <div class="pt-3 border-t border-gray-700">
+                        <span class="text-purple-400 text-xs">🧬 Disease detection | 💊 Treatment plan | 📈 Yield prediction</span>
+                    </div>
+                </div>
+
+                <!-- Tool Marketplace Page -->
+                <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 card-hover" data-aos="fade-up" data-aos-delay="300">
+                    <div class="bg-blue-900/50 w-12 h-12 rounded-xl flex items-center justify-center mb-4">
+                        <i class="fas fa-store text-blue-400 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">🏪 Tool Marketplace</h3>
+                    <p class="text-gray-400 text-sm mb-3">Use Case:</p>
+                    <p class="text-gray-300 text-sm mb-3">
+                        Farmers can buy/sell agricultural tools, equipment, seeds, and organic 
+                        medicines. Direct farmer-to-farmer and farmer-to-buyer transactions.
+                    </p>
+                    <div class="pt-3 border-t border-gray-700">
+                        <span class="text-blue-400 text-xs">🛠️ Quality tools | 💊 Organic medicines | 🔒 Secure payments</span>
+                    </div>
+                </div>
+
+                <!-- Government Resources (Current Page Add-on) -->
+                <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 card-hover" data-aos="fade-up" data-aos-delay="400">
+                    <div class="bg-yellow-900/50 w-12 h-12 rounded-xl flex items-center justify-center mb-4">
+                        <i class="fas fa-building-columns text-yellow-400 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">🏛️ Government Resources</h3>
+                    <p class="text-gray-400 text-sm mb-3">Use Case:</p>
+                    <p class="text-gray-300 text-sm mb-3">
+                        Direct access to PM-KISAN, eNAM, PMFBY crop insurance, Soil Health Card, 
+                        and NABARD loans. One-click navigation to official portals.
+                    </p>
+                    <div class="pt-3 border-t border-gray-700">
+                        <span class="text-yellow-400 text-xs">💰 Schemes | 📊 Market | 🛡️ Insurance | 🌱 Soil testing</span>
+                    </div>
+                </div>
+
+                <!-- Weather & Alerts -->
+                <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 card-hover" data-aos="fade-up" data-aos-delay="500">
+                    <div class="bg-cyan-900/50 w-12 h-12 rounded-xl flex items-center justify-center mb-4">
+                        <i class="fas fa-cloud-sun-rain text-cyan-400 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">🌦️ Weather & Alerts</h3>
+                    <p class="text-gray-400 text-sm mb-3">Use Case:</p>
+                    <p class="text-gray-300 text-sm mb-3">
+                        Live weather forecasts from IMD, crop-specific agromet advisories, 
+                        and emergency alerts for cyclones, hailstorms, and pest outbreaks.
+                    </p>
+                    <div class="pt-3 border-t border-gray-700">
+                        <span class="text-cyan-400 text-xs">📡 IMD integration | 🌾 Crop advisories | ⚠️ Emergency alerts</span>
+                    </div>
+                </div>
+
+                <!-- Farmer Support -->
+                <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 card-hover" data-aos="fade-up" data-aos-delay="600">
+                    <div class="bg-red-900/50 w-12 h-12 rounded-xl flex items-center justify-center mb-4">
+                        <i class="fas fa-headset text-red-400 text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2">📞 Farmer Support</h3>
+                    <p class="text-gray-400 text-sm mb-3">Use Case:</p>
+                    <p class="text-gray-300 text-sm mb-3">
+                        24/7 access to Kisan Call Center (1800-180-1551), AI chatbot for 
+                        instant queries, and expert consultation for farming problems.
+                    </p>
+                    <div class="pt-3 border-t border-gray-700">
+                        <span class="text-red-400 text-xs">📞 Toll-free helpline | 🤖 AI chatbot | 👨‍🌾 Expert advice</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technology Stack Section -->
+    <section class="py-16 bg-gray-950">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12" data-aos="fade-up">
+                <span class="text-green-500 font-semibold text-lg">TECHNOLOGY</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-white mt-2">Built With Modern Tech Stack</h2>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="bg-gray-800 rounded-xl p-5 text-center card-hover" data-aos="fade-up" data-aos-delay="100">
+                    <i class="fab fa-python text-4xl text-blue-400 mb-3"></i>
+                    <h3 class="text-white font-semibold">Python Flask</h3>
+                    <p class="text-gray-500 text-xs">Backend Framework</p>
+                </div>
+                <div class="bg-gray-800 rounded-xl p-5 text-center card-hover" data-aos="fade-up" data-aos-delay="200">
+                    <i class="fab fa-js text-4xl text-yellow-400 mb-3"></i>
+                    <h3 class="text-white font-semibold">JavaScript</h3>
+                    <p class="text-gray-500 text-xs">Frontend Logic</p>
+                </div>
+                <div class="bg-gray-800 rounded-xl p-5 text-center card-hover" data-aos="fade-up" data-aos-delay="300">
+                    <i class="fab fa-css3-alt  text-4xl text-blue-500 mb-3"></i>
+                    <h3 class="text-white font-semibold">CSS & HTML</h3>
+                    <p class="text-gray-500 text-xs">Styling & UI</p>
+                </div>
+                <div class="bg-gray-800 rounded-xl p-5 text-center card-hover" data-aos="fade-up" data-aos-delay="400">
+                    <i class="fas fa-brain text-4xl text-purple-400 mb-3"></i>
+                    <h3 class="text-white font-semibold">AI using Gemini API</h3>
+                    <p class="text-gray-500 text-xs">AI Chatbot</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Future Roadmap -->
+    <!-- Horizontal Photo Gallery - No Text -->
+<section class="py-16 bg-gray-900">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <!-- Section Header -->
+        <div class="text-center mb-10" data-aos="fade-up">
+            <span class="text-green-500 font-semibold text-lg">GALLERY</span>
+            <h2 class="text-3xl md:text-4xl font-bold text-white mt-2">
+                AgriBot in Action
+            </h2>
+        </div>
+
+        <!-- Photo Carousel Container -->
+        <div class="relative" data-aos="fade-up">
+            
+            <!-- Left Arrow -->
+            <button id="galleryPrev" class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-black/50 hover:bg-green-600 text-white rounded-full w-10 h-10 flex items-center justify-center shadow-lg transition-all duration-300 -ml-4 md:-ml-5 backdrop-blur-sm">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+
+            <!-- Photos Container -->
+            <div id="galleryContainer" class="flex overflow-x-auto scroll-smooth gap-4 pb-4 hide-scrollbar" style="scrollbar-width: none; -ms-overflow-style: none;">
+                
+                <!-- Photo 1 -->
+                <img src="https://images.unsplash.com/photo-1592982537447-2f2c6a7a9f5c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                     alt="Gallery image 1" 
+                     class="min-w-[280px] md:min-w-[320px] h-64 object-cover rounded-xl">
+
+                <!-- Photo 2 -->
+                <img src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                     alt="Gallery image 2" 
+                     class="min-w-[280px] md:min-w-[320px] h-64 object-cover rounded-xl">
+
+                <!-- Photo 3 -->
+                <img src="https://images.unsplash.com/photo-1593113598332-cd288d649433?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                     alt="Gallery image 3" 
+                     class="min-w-[280px] md:min-w-[320px] h-64 object-cover rounded-xl">
+
+                <!-- Photo 4 -->
+                <img src="https://images.unsplash.com/photo-1586771107445-d3ca888129ce?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                     alt="Gallery image 4" 
+                     class="min-w-[280px] md:min-w-[320px] h-64 object-cover rounded-xl">
+
+                <!-- Photo 5 -->
+                <img src="https://images.unsplash.com/photo-1574943320219-553eb213f972?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                     alt="Gallery image 5" 
+                     class="min-w-[280px] md:min-w-[320px] h-64 object-cover rounded-xl">
+
+                <!-- Photo 6 -->
+                <img src="https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                     alt="Gallery image 6" 
+                     class="min-w-[280px] md:min-w-[320px] h-64 object-cover rounded-xl">
+
+                <!-- Photo 7 -->
+                <img src="https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                     alt="Gallery image 7" 
+                     class="min-w-[280px] md:min-w-[320px] h-64 object-cover rounded-xl">
+
+                <!-- Photo 8 -->
+                <img src="https://images.unsplash.com/photo-1592417817098-8fd3d9eb14a5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                     alt="Gallery image 8" 
+                     class="min-w-[280px] md:min-w-[320px] h-64 object-cover rounded-xl">
+
+            </div>
+
+            <!-- Right Arrow -->
+            <button id="galleryNext" class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-black/50 hover:bg-green-600 text-white rounded-full w-10 h-10 flex items-center justify-center shadow-lg transition-all duration-300 -mr-4 md:-mr-5 backdrop-blur-sm">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+
+        </div>
+
+        <!-- Dots -->
+        <div class="flex justify-center gap-2 mt-6" id="galleryDots"></div>
+
+        <!-- Hint -->
+        <p class="text-center text-gray-500 text-xs mt-4">
+            <i class="fas fa-arrows-alt-h mr-1"></i> Drag or use arrows to scroll
+        </p>
+
+    </div>
+</section>
+
+
+    <!-- Call to Action -->
+    <section class="py-16 bg-gradient-to-r from-green-800 to-green-950">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" data-aos="fade-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Ready to Transform Your Farming?</h2>
+            <p class="text-green-200 text-lg mb-8">Join thousands of farmers already using AgriBot</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                {%if session.get('user') %}
+                <a href="/crops" class="bg-transparent border-2 border-white text-white px-8 py-3 rounded-full hover:bg-white/10 transition font-semibold inline-flex items-center justify-center">
+                    <i class="fas fa-leaf mr-2"></i> Explore Crops
+                </a>
+                <a href="/AI" class="bg-green-500 text-white px-8 py-3 rounded-full hover:bg-green-600 transition font-semibold inline-flex items-center justify-center">
+                    <i class="fas fa-microchip mr-2"></i> Try AI Assistant
+                </a>
+                {% else %}
+                <a href="{{ url_for('main.login') }}" class="bg-white text-green-700 px-8 py-3 rounded-full hover:bg-gray-100 transition font-semibold shadow-lg inline-flex items-center justify-center">
+                    <i class="fas fa-rocket mr-2"></i> Get Started Free
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-950 border-t border-gray-800 py-8">
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+
+        <!-- Logo -->
+        <div class="text-center md:text-left">
+
+            <div class="flex items-center justify-center md:justify-start space-x-2">
+                <i class="fas fa-seedling text-2xl text-green-500"></i>
+
+                <span class="text-2xl font-bold text-white">
+                    Agri<span class="text-green-500">Bot</span>
+                </span>
+            </div>
+
+            <p class="text-gray-400 text-sm mt-2">
+                Smart agriculture powered by AI technology.
+            </p>
+
+        </div>
+
+        <!-- Navigation -->
+        <div class="flex flex-wrap justify-center gap-6 text-sm">
+
+            <a href="/" class="text-gray-400 hover:text-green-500 transition">
+                Home
+            </a>
+
+            <a href="/crops" class="text-gray-400 hover:text-green-500 transition">
+                Crops
+            </a>
+
+            <a href="/AI" class="text-gray-400 hover:text-green-500 transition">
+                AI Analysis
+            </a>
+
+            <a href="/market" class="text-gray-400 hover:text-green-500 transition">
+                Marketplace
+            </a>
+
+        </div>
+
+        <!-- Social -->
+        <div class="flex space-x-4">
+
+            <a href="#" class="text-gray-400 hover:text-green-500 text-lg transition">
+                <i class="fab fa-github"></i>
+            </a>
+
+            <a href="https://www.linkedin.com/in/bhairavsinh-devda/" target="_blank" class="text-gray-400 hover:text-green-500 text-lg transition">
+                <i class="fab fa-linkedin"></i>
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- Bottom -->
+    <div class="border-t border-gray-800 mt-6 pt-6 text-center">
+
+        <p class="text-gray-500 text-sm">
+           © 2026 AgriBot • Built by Team AgriBot. All rights reserved.
+        </p>
+
+    </div>
+
+</div>
+
+</footer>
+
+    {% include 'profile.html' %}
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+         const container = document.getElementById('galleryContainer');
+    const prevBtn = document.getElementById('galleryPrev');
+    const nextBtn = document.getElementById('galleryNext');
+    const dotsContainer = document.getElementById('galleryDots');
+    
+    const scrollAmount = 340;
+    let autoScrollInterval;
+    
+    // Create dots
+    function createDots() {
+        const photos = document.querySelectorAll('#galleryContainer img');
+        dotsContainer.innerHTML = '';
+        for (let i = 0; i < photos.length; i++) {
+            const dot = document.createElement('div');
+            dot.classList.add('dot');
+            if (i === 0) dot.classList.add('active');
+            dot.addEventListener('click', () => {
+                const photoWidth = photos[0].offsetWidth;
+                const gap = 16;
+                container.scrollTo({ left: i * (photoWidth + gap), behavior: 'smooth' });
+            });
+            dotsContainer.appendChild(dot);
+        }
+    }
+    
+    // Update active dot
+    function updateDots() {
+        const photos = document.querySelectorAll('#galleryContainer img');
+        const scrollPos = container.scrollLeft;
+        const photoWidth = photos[0]?.offsetWidth || 320;
+        const gap = 16;
+        const activeIndex = Math.round(scrollPos / (photoWidth + gap));
+        const dots = document.querySelectorAll('.dot');
+        dots.forEach((dot, idx) => {
+            if (idx === activeIndex) dot.classList.add('active');
+            else dot.classList.remove('active');
+        });
+    }
+    
+    // Arrow clicks
+    nextBtn.addEventListener('click', () => {
+        container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        setTimeout(updateDots, 300);
+    });
+    
+    prevBtn.addEventListener('click', () => {
+        container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+        setTimeout(updateDots, 300);
+    });
+    
+    // Update dots on scroll
+    container.addEventListener('scroll', updateDots);
+    
+    // Initialize
+    createDots();
+    window.addEventListener('resize', updateDots);
+
+
+        AOS.init({ duration: 800, once: true, offset: 100 });
+
+        window.addEventListener("scroll", () => {
+            const nav = document.querySelector("nav");
+            if (window.scrollY > 50) nav.classList.add("shadow-2xl");
+            else nav.classList.remove("shadow-2xl");
+        });
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+    </script>
+</body>
+</html>
