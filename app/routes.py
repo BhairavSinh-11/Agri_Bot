@@ -1,9 +1,8 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, session, request,jsonify
+from flask import Blueprint, render_template, session, request,jsonify
 from . import db
 from . import csrf
 from .models import User ,Chat
-from .forms import RegistrationForm, LoginForm , ForgotResetForm
-from flask_login import login_user, logout_user, login_required,current_user
+from flask_login import login_required,current_user
 from google import genai
 from google.genai import types
 import os
@@ -127,123 +126,6 @@ def about():
     return render_template("about.html",active="about")
 
 
-#  REGISTER
-
-@main.route('/register', methods=['GET', 'POST'])
-def register():
-    form = RegistrationForm()
-
-    if form.validate_on_submit():
-        username=form.username.data.capitalize()
-        user = User(
-            username=username,
-            display_name=username,
-            email=form.email.data,
-            password=form.password.data,
-            )
-
-        db.session.add(user)
-        db.session.commit()
-
-        flash("Account created successfully!", "success")
-        return redirect(url_for('main.login'))
-
-    return render_template('register.html', form=form)
-
-
-# ADMIN ROUTE
-
-@main.route('/admin/dashboard')
-def admin_dashboard():
-    if not session.get('admin'):
-        flash('Please login as admin first', 'danger')
-        return redirect(url_for('main.login'))
-
-    users = User.query.all()
-    return render_template('data.html', users=users)
-
-
-# LOGIN
-
-@main.route('/login', methods=['GET', 'POST'])
-def login():
-    form = LoginForm()
-
-    if form.validate_on_submit():
-        username = form.username.data.capitalize()
-        password = form.password.data
-
-        user = User.query.filter_by(username=username).first()
-
-        if user and user.check_password(password):
-
-            # CHECK ADMIN FROM DATABASE
-
-            if user.is_admin:
-                session['admin'] = True
-                return redirect(url_for('main.admin_dashboard'))
-
-            # FOR NORMAL USER
-
-            login_user(user)
-            
-            session['user'] = {
-    "id": user.id,
-    "name": user.display_name,   
-    "username": user.username,
-    "email": user.email
-}
-            return redirect(url_for('main.home'))
-
-        else:
-            flash('Invalid credentials', 'danger')
-
-    return render_template('login.html', form=form)
-
-# LOGOUT
-
-@main.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    session.clear()
-    return redirect(url_for('main.home'))
-
-#DELETE ROUTE
-
-@main.route('/delete/<int:id>')
-def delete_profile(id):
-
-    user = User.query.get_or_404(id)
-    db.session.delete(user)
-    db.session.commit()
-
-    return redirect(url_for('main.admin_dashboard'))
-
-
-#  FORGOT PASSWORD
-
-@main.route('/forgotpass', methods=['GET', 'POST'])
-def forgotpass():
-    form = ForgotResetForm()
-
-    if form.validate_on_submit():
-        email = form.email.data.lower()
-        user = User.query.filter_by(email=email).first()
-
-        if not user:
-            flash("Email not found", "danger")
-            return redirect(url_for('main.forgotpass'))
-
-        # 🔐 Update password
-       
-        user.set_password(form.password.data)
-        db.session.commit()
-
-        flash("Password reset successful!", "success")
-        return redirect(url_for('main.login'))
-
-    return render_template('forgotpass.html', form=form)
 
 #AI ASSISTANT
 

@@ -3,8 +3,13 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import CSRFProtect
 from flask_login import LoginManager
 from dotenv import load_dotenv
+import os
 
 load_dotenv()
+
+SECRET_KEY=os.getenv("SECRET_KEY")
+
+SQLALCHEMY_DATABASE_URI=os.getenv("SQLALCHEMY_DATABASE_URI")
 
 db = SQLAlchemy()
 csrf = CSRFProtect()
@@ -12,8 +17,8 @@ login_manager = LoginManager()
 
 def create_app():
     app = Flask(__name__)
-    app.config['SECRET_KEY'] = 'your_secret_key'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///myagridata.db'
+    app.config['SECRET_KEY'] = SECRET_KEY
+    app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 
     db.init_app(app)
     csrf.init_app(app)
@@ -23,6 +28,9 @@ def create_app():
 
     from .routes import main
     app.register_blueprint(main)
+
+    from .auth import auth
+    app.register_blueprint(auth)
 
     from .models import User
 

@@ -128,7 +128,7 @@
 
         <div class="flex gap-2">
             <a href="{{ url_for('main.home') }}" class="btn-secondary">Home</a>
-            <a href="{{ url_for('main.logout') }}" class="btn-primary">Logout</a>
+            <a href="{{ url_for('auth.logout') }}" class="btn-primary">Logout</a>
         </div>
     </div>
 
@@ -153,7 +153,7 @@
                     <td>{{ user.email }}</td>
                     <td>********</td>
                     <td>
-                        <a href="{{ url_for('main.delete_profile', id=user.id) }}"
+                        <a href="{{ url_for('auth.delete_profile', id=user.id) }}"
                            onclick="return confirm('Delete this user?')"
                            class="delete-btn">
                            Delete
@@ -190,7 +190,7 @@
         </div>
 
         <div class="profile-item">
-            <a href="{{ url_for('main.delete_profile', id=user.id) }}"
+            <a href="{{ url_for('auth.delete_profile', id=user.id) }}"
                class="delete-btn"
                onclick="return confirm('Delete this user?')">
                Delete
@@ -205,7 +205,7 @@
     {% if not users %}
     <div class="text-center mt-10 text-gray-400">
         <p>No users found</p>
-        <a href="{{ url_for('main.register') }}" class="btn-primary mt-4 inline-block">
+        <a href="{{ url_for('auth.register') }}" class="btn-primary mt-4 inline-block">
             Add User
         </a>
     </div>

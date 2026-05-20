@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>AgriBot - Smart Agriculture Platform</title>
+    <title>AgriBot</title>
      <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }} "
           type="image/x-icon">
    
@@ -214,7 +214,7 @@
                     {% endif %}
                 {% endwith %}
 
-                <form method="POST" action="{{ url_for('main.login') }}">
+                <form method="POST" action="{{ url_for('auth.login') }}">
                     {{ form.hidden_tag() }}
                     
                     <div class="input-group">
@@ -263,23 +263,17 @@
                 </div>
 
                 <div class="grid grid-cols-3 gap-3">
+                    <center>
                     <button class="social-btn" onclick="socialLogin('google')">
                         <i class="fab fa-google text-red-500"></i>
                         <span class="text-xs text-gray-300 hidden sm:inline">Google</span>
                     </button>
-                    <button class="social-btn" onclick="socialLogin('facebook')">
-                        <i class="fab fa-facebook-f text-blue-500"></i>
-                        <span class="text-xs text-gray-300 hidden sm:inline">Facebook</span>
-                    </button>
-                    <button class="social-btn" onclick="socialLogin('github')">
-                        <i class="fab fa-github text-gray-400"></i>
-                        <span class="text-xs text-gray-300 hidden sm:inline">GitHub</span>
-                    </button>
+                    </center>
                 </div>
 
                 <p class="text-center text-sm text-gray-400">
                     Don't have an account?
-                    <a href="{{ url_for('main.register') }}" class="text-green-500 hover:text-green-400 font-semibold transition">
+                    <a href="{{ url_for('auth.register') }}" class="text-green-500 hover:text-green-400 font-semibold transition">
                         Create an account
                     </a><br>
                     <br>
