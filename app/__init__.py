@@ -4,6 +4,7 @@ from flask_wtf import CSRFProtect
 from flask_login import LoginManager
 from dotenv import load_dotenv
 import os
+from .extension import oauth
 
 load_dotenv()
 
@@ -20,17 +21,20 @@ def create_app():
     app.config['SECRET_KEY'] = SECRET_KEY
     app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 
+    oauth.init_app(app)
+    
     db.init_app(app)
     csrf.init_app(app)
     login_manager.init_app(app)
 
-    login_manager.login_view = 'main.login'
+    login_manager.login_view = 'auth.login'
 
     from .routes import main
     app.register_blueprint(main)
 
     from .auth import auth
     app.register_blueprint(auth)
+    
 
     from .models import User
 

@@ -262,14 +262,17 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-3 gap-3">
-                    <center>
-                    <button class="social-btn" onclick="socialLogin('google')">
-                        <i class="fab fa-google text-red-500"></i>
-                        <span class="text-xs text-gray-300 hidden sm:inline">Google</span>
-                    </button>
-                    </center>
-                </div>
+            <div class="flex justify-center items-center mt-4">
+             <button class="social-btn px-6 py-2 flex items-center gap-2">
+                <a href="{{ url_for('auth.google_login') }}" class="google-btn">
+                    
+                   <i class="fab fa-google text-red-500"></i>
+                    <span class="text-xs text-gray-300 hidden sm:inline">
+                        Google
+                 </span>
+                </a>
+             </button>
+            </div>
 
                 <p class="text-center text-sm text-gray-400">
                     Don't have an account?
@@ -286,11 +289,6 @@
     </section>
 
     <script>
-        function socialLogin(provider) {
-            console.log(`Logging in with ${provider}`);
-            alert(`Redirecting to ${provider} login...\n\nThis would integrate with ${provider} OAuth in production.`);
-        }
-
         document.addEventListener('DOMContentLoaded', function() {
             AOS.init({
                 duration: 800,

@@ -3,8 +3,10 @@ from . import db
 from .models import User
 from flask_login import login_user, logout_user, login_required ,current_user
 from .forms import RegistrationForm, LoginForm , ForgotResetForm
+from .extension import oauth
 
 auth = Blueprint('auth', __name__)
+google= oauth.create_client('google')
 
 #  REGISTER
 
@@ -33,8 +35,9 @@ def register():
 # ADMIN ROUTE
 
 @auth.route('/admin/dashboard')
+@login_required
 def admin_dashboard():
-    if not session.get('admin'):
+    if not current_user.is_admin:
         flash('Please login as admin first', 'danger')
         return redirect(url_for('auth.login'))
 
@@ -76,7 +79,7 @@ def login():
             return redirect(url_for('main.home'))
 
         else:
-            flash('Invalid credentials', 'danger')
+            flash('Invalid Username or Password', 'danger')
 
     return render_template('login.html', form=form)
 
@@ -127,3 +130,64 @@ def forgotpass():
         return redirect(url_for('auth.login'))
 
     return render_template('forgotpass.html', form=form)
+
+
+#google login route
+@auth.route('/login/google')
+def google_login(): 
+    try:
+        redirect_uri = url_for('auth.google_callback', _external=True)
+        return oauth.google.authorize_redirect(redirect_uri)  
+    except Exception as e:
+         print("GOOGLE OAUTH ERROR:", e)
+
+         flash(f"Google login failed: {str(e)}", "danger")
+
+         return redirect(url_for('auth.login'))
+
+#google auth callback route
+@auth.route('/auth/google/callback')
+def google_callback():
+
+    try:
+
+        token = google.authorize_access_token()
+
+        user_info = token['userinfo']
+
+        email = user_info['email']
+
+        user = User.query.filter_by(email=email).first()
+
+        if not user:
+
+            username = email.split("@")[0].lower()
+
+            user = User(
+                email=email,
+                username=username,
+                display_name=user_info.get("name"),
+                google_id=user_info.get("sub")
+            )
+
+            db.session.add(user)
+            db.session.commit()
+
+        login_user(user)
+
+        session['user'] = {
+            "id": user.id,
+            "name": user.display_name,
+            "username": user.username,
+            "email": user.email
+        }
+
+        return redirect(url_for('main.home'))
+
+    except Exception as e:
+
+        print("Google OAuth Error:", e)
+
+        flash("Google login failed", "danger")
+
+        return redirect(url_for('auth.login'))

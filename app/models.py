@@ -9,14 +9,17 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(80), unique=True, nullable=False)
     display_name = db.Column(db.String(100))
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password_hash = db.Column(db.String(200), nullable=False)
+    password_hash = db.Column(db.String(200), nullable=True)
+    google_id = db.Column(db.String(255), unique=True, nullable=True)
     is_admin = db.Column(db.Boolean, default=False)
 
-    def __init__(self, username, email, password,display_name=None):
+    def __init__(self, username, email, password=None, display_name=None, google_id=None):
         self.username = username
         self.display_name= display_name or username
         self.email = email.lower()
-        self.set_password(password)
+        if password:
+         self.set_password(password)
+        self.google_id = google_id 
 
     def set_password(self, password):
         salt = bcrypt.gensalt()
