@@ -6,7 +6,9 @@ from flask_login import login_required,current_user
 from google import genai
 from google.genai import types
 import os
-
+from werkzeug.utils import secure_filename
+import uuid
+import time
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 
@@ -109,8 +111,8 @@ def crops():
 @main.route('/AI')
 @login_required
 def AI():
-    username = current_user.username
-    return render_template('AI.html', username=username,active='AI')
+    # display_name = current_user.display_name
+    return render_template('AI.html',  display_name=current_user.display_name,active='AI')
 
 
 #market
@@ -133,9 +135,13 @@ def about():
 @csrf.exempt
 @login_required
 def chat_assistant():
+
+    cleanup_old_images()
+
     try:
         user_message=request.form.get('message')
         image = request.files.get('image')
+        image_path = None
 
         if not user_message and image:
             user_message = "Image uploaded"
@@ -155,7 +161,7 @@ def chat_assistant():
         prompt = f"""
         You are AgriBot 🌱.
 
-        User name: {current_user.username}
+        User name: {current_user.display_name}
 
         Conversation history:
         {history}
@@ -166,10 +172,35 @@ def chat_assistant():
         """
 
         # 📷 IMAGE
+        
 
         if image:
+
+            image_bytes = image.read()
+
+            filename = f"{uuid.uuid4()}_{secure_filename(image.filename)}"
+
+            upload_folder = os.path.join(
+        'app',
+        'static',
+        'uploads',
+        'chat_images'
+                 )
+            
+            os.makedirs(upload_folder, exist_ok=True)
+
+            upload_path = os.path.join(
+               upload_folder,
+            filename
+                 )
+
+            with open(upload_path, 'wb') as f:
+                f.write(image_bytes)
+
+            image_path = f"/static/uploads/chat_images/{filename}"
+
             image_part = types.Part.from_bytes(
-                data=image.read(),
+                data=image_bytes,
                 mime_type=image.mimetype
             )
 
@@ -190,7 +221,8 @@ def chat_assistant():
         chat = Chat(
             user_id=current_user.id,
             message=user_message,
-            response=bot_reply
+            response=bot_reply,
+            image_path=image_path
         )
         db.session.add(chat)
         db.session.commit()
@@ -214,7 +246,8 @@ def chat_history():
         {   
             "id":chat.id,
             "message": chat.message,
-            "response": chat.response
+            "response": chat.response,
+            "image_path": chat.image_path
         }
         for chat in chats
     ])
@@ -236,3 +269,53 @@ def delete_chat(chat_id):
 
     return jsonify({"success": True})
 
+
+#image cleanup function to delete old images after 1 minute and also delete related chat from db
+
+def cleanup_old_images():
+
+    folder = os.path.join(
+        'app',
+        'static',
+        'uploads',
+        'chat_images'
+    )
+
+    if not os.path.exists(folder):
+        return
+
+    now = time.time()
+
+    for filename in os.listdir(folder):
+
+        file_path = os.path.join(folder, filename)
+
+        if os.path.isfile(file_path):
+
+            file_age = now - os.path.getmtime(file_path)
+
+            minutes_old = file_age / 60
+
+            # Delete after 1 minute
+            if minutes_old > 1:
+
+                image_url = f"/static/uploads/chat_images/{filename}"
+
+                # Find related chat
+                chat = Chat.query.filter_by(
+                    image_path=image_url
+                ).first()
+
+                # Delete image file
+                os.remove(file_path)
+
+                print(f"Deleted old image: {filename}")
+
+                # Delete chat row too
+                if chat:
+
+                    db.session.delete(chat)
+
+                    db.session.commit()
+
+                    print(f"Deleted related chat: {chat.id}")

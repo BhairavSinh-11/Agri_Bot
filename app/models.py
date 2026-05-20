@@ -36,4 +36,5 @@ class Chat(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     message = db.Column(db.Text)
     response = db.Column(db.Text)
+    image_path = db.Column(db.String(300), nullable=True)
     timestamp = db.Column(db.DateTime, default=db.func.now())

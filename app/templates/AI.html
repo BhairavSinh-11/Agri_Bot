@@ -524,7 +524,7 @@
         const messagesArea = document.getElementById('messagesArea');
         messagesArea.innerHTML = '';
 
-        addMessageToDOM(chat.message, true);
+        addMessageToDOM(chat.message, true,chat.image_path || null);
         addMessageToDOM(chat.response, false);
     });
 
@@ -582,7 +582,8 @@ async function deleteChat(chatId) {
             if (isUser) {
                 messageDiv.innerHTML = `
                     <div class="message-content">
-                        ${imageData ? `<img src="${imageData}" class="max-w-full rounded-lg mb-2 max-h-48 object-cover">` : ''}
+                        ${imageData && imageData != "null" 
+                        ? `<img src="${imageData}" class="max-w-full rounded-lg mb-2 max-h-48 object-cover">` : ''}
                         <div>${escapeHtml(content)}</div>
                     </div>
                     <div class="message-avatar">
@@ -765,7 +766,7 @@ async function deleteChat(chatId) {
         marked.setOptions({ breaks: true, gfm: true });
 
         window.onload = () => {
-            addMessageToDOM("Hello {{username}} 😊 I am AgriBot. How can I help you today?", false);
+            addMessageToDOM("Hello {{display_name or 'Farmer'}} 😊 I am AgriBot. How can I help you today?", false);
         loadChats();
             };
     </script>

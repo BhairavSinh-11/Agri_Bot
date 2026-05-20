@@ -22,12 +22,14 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 
     oauth.init_app(app)
-    
+
     db.init_app(app)
     csrf.init_app(app)
     login_manager.init_app(app)
 
     login_manager.login_view = 'auth.login'
+
+    from .scheduler import start_scheduler
 
     from .routes import main
     app.register_blueprint(main)
@@ -44,5 +46,8 @@ def create_app():
 
     with app.app_context():
         db.create_all()
+
+    if not app.debug or os.environ.get("WERKZEUG_RUN_MAIN") == "true":
+            start_scheduler()
 
     return app
