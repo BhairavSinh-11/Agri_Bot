@@ -107,6 +107,11 @@ def update_profile():
 def crops():
     return render_template('crops.html',active='crops')
 
+@main.route('/annadata')
+def annadata():
+    return render_template('annadata.html',active='annadata')
+
+
 #AI ASSISANT
 @main.route('/AI')
 @login_required
@@ -117,6 +122,7 @@ def AI():
 
 #market
 @main.route('/agrimarket')
+@login_required
 def agrimarket():
     return render_template("market.html",active="agrimarket")
 

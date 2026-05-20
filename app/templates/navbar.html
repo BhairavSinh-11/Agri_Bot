@@ -19,7 +19,11 @@
 
                     <a href="/AI" class="{% if active=='AI' %}text-green-500 transition font-medium{% else %}text-gray-300 hover:text-green-500 transition font-medium{% endif %}">AI Assistant</a>
 
+                    <a href="/annadata" class="{% if active=='annadata' %}text-green-500 transition font-medium{% else %}text-gray-300 hover:text-green-500 transition font-medium{% endif %}">Annadata</a>
+
                     <a href="/about" class="{% if active=='about' %}text-green-500 transition font-medium{% else %}text-gray-300 hover:text-green-500 transition font-medium{% endif %}">About</a>
+
+                     
                 </div>
                 
                 <div class="flex items-center space-x-4">
@@ -76,7 +80,10 @@
                 
                 <a href="/AI" class="{% if active=='AI' %}block text-green-500 py-2{% else %}block text-gray-300 hover:text-green-500 py-2{% endif %}">AI Assistant</a>
                 
+                <a href="/annadata" class="{% if active=='annadata' %}block text-green-500 py-2{% else %}block text-gray-300 hover:text-green-500 py-2{% endif %}">Annadata</a>
+                
                 <a href="/about" class="{% if active=='about' %}block text-green-500 py-2{% else %}block text-gray-300 hover:text-green-500 py-2{% endif %}">About</a>
+
                 <div class="pt-2 space-y-2">
 
                     {% if session.get('user') %}

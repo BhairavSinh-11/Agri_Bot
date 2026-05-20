@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Farming - AgriBot | The Heart of Indian Agriculture</title>
+
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --bg-primary: #0a0f1a;
+            --bg-secondary: #111827;
+            --bg-card: #1f2937;
+            --text-primary: #f9fafb;
+            --text-secondary: #d1d5db;
+            --border-color: #374151;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        nav, .bg-white, .bg-gray-50, .bg-gray-100 {
+            background-color: var(--bg-secondary) !important;
+        }
+
+        .card-hover {
+            transition: all 0.3s ease-in-out;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        .farming-bg {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7)),
+                              url("{{ url_for('static', filename='img/about_crops/pic2.jpg') }}");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+        }
+
+        .timeline-dot {
+            position: relative;
+        }
+        .timeline-dot::before {
+            content: '';
+            position: absolute;
+            left: -12px;
+            top: 8px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #22c55e;
+        }
+
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 5px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+    </style>
+</head>
+<body>
+
+    {% include 'navbar.html' %}
+
+    <!-- Hero Section -->
+    <section class="farming-bg py-20 md:py-28">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center" data-aos="fade-up">
+            <div class="inline-flex items-center gap-2 bg-green-500/20 rounded-full px-4 py-1 mb-6 backdrop-blur-sm">
+                <i class="fas fa-seedling text-green-400 text-sm"></i>
+                <span class="text-green-300 text-sm font-medium">Annadata Sukhibhava</span>
+            </div>
+            <h1 class="text-4xl md:text-6xl font-bold text-white mb-6">
+                Farming is Not Just a Profession,<br>
+                <span class="text-green-400">It's a Blessing</span>
+            </h1>
+            <p class="text-lg md:text-xl text-gray-200 max-w-3xl mx-auto">
+                Over 58% of India's population depends on agriculture. Farmers are the backbone of our nation.
+            </p>
+        </div>
+    </section>
+
+    <!-- Motivation Section -->
+    <section class="py-16 bg-gray-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div data-aos="fade-right">
+                    <span class="text-green-500 font-semibold text-lg">MOTIVATION</span>
+                    <h2 class="text-3xl md:text-4xl font-bold text-white mt-2 mb-4">Why Farming Matters?</h2>
+                    <p class="text-gray-300 leading-relaxed mb-6">
+                        Farming feeds nations, creates livelihoods, and sustains civilizations. 
+                        Every farmer is a silent warrior who wakes up before sunrise, works till sunset, 
+                        and ensures that no one goes to bed hungry.
+                    </p>
+                    <div class="space-y-3">
+                        <div class="flex items-start gap-3">
+                            <i class="fas fa-heart text-green-500 mt-1"></i>
+                            <span class="text-gray-300">Farmers feed 1.4 billion people in India alone</span>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <i class="fas fa-chart-line text-green-500 mt-1"></i>
+                            <span class="text-gray-300">Agriculture contributes 18% to India's GDP</span>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <i class="fas fa-globe text-green-500 mt-1"></i>
+                            <span class="text-gray-300">India is the world's largest producer of milk, pulses, and spices</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gradient-to-br from-green-900/30 to-gray-800/30 rounded-2xl p-8 text-center border border-green-800/30" data-aos="fade-left">
+                    <i class="fas fa-quote-left text-green-500 text-3xl mb-4"></i>
+                    <p class="text-white text-xl italic mb-4">
+                        "The farmer is the only man in our economy who buys everything at retail, sells everything at wholesale, and pays the freight both ways."
+                    </p>
+                    <p class="text-green-400">— John F. Kennedy</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Importance of Farming -->
+    <section class="py-16 bg-gray-950">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12" data-aos="fade-up">
+                <span class="text-green-500 font-semibold text-lg">IMPORTANCE</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-white mt-2">Why Farming is Essential?</h2>
+                <p class="text-gray-400 mt-4 max-w-2xl mx-auto">Farming impacts every aspect of our lives</p>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-gray-800 rounded-xl p-6 text-center card-hover border border-gray-700" data-aos="fade-up" data-aos-delay="100">
+                    <div class="w-16 h-16 bg-green-900/50 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-utensils text-2xl text-green-400"></i>
+                    </div>
+                    <h3 class="text-white font-bold text-lg mb-2">Food Security</h3>
+                    <p class="text-gray-400 text-sm">Provides nutritious food for the entire population</p>
+                </div>
+                <div class="bg-gray-800 rounded-xl p-6 text-center card-hover border border-gray-700" data-aos="fade-up" data-aos-delay="200">
+                    <div class="w-16 h-16 bg-blue-900/50 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-briefcase text-2xl text-blue-400"></i>
+                    </div>
+                    <h3 class="text-white font-bold text-lg mb-2">Employment</h3>
+                    <p class="text-gray-400 text-sm">Largest source of livelihood in rural India</p>
+                </div>
+                <div class="bg-gray-800 rounded-xl p-6 text-center card-hover border border-gray-700" data-aos="fade-up" data-aos-delay="300">
+                    <div class="w-16 h-16 bg-yellow-900/50 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-industry text-2xl text-yellow-400"></i>
+                    </div>
+                    <h3 class="text-white font-bold text-lg mb-2">Economic Growth</h3>
+                    <p class="text-gray-400 text-sm">Drives rural economy and industrial raw materials</p>
+                </div>
+                <div class="bg-gray-800 rounded-xl p-6 text-center card-hover border border-gray-700" data-aos="fade-up" data-aos-delay="400">
+                    <div class="w-16 h-16 bg-purple-900/50 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-leaf text-2xl text-purple-400"></i>
+                    </div>
+                    <h3 class="text-white font-bold text-lg mb-2">Environment</h3>
+                    <p class="text-gray-400 text-sm">Maintains ecological balance and green cover</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Necessity of Farming -->
+    <section class="py-16 bg-gray-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="order-2 md:order-1" data-aos="fade-right">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-gray-800 rounded-xl p-4 text-center">
+                            <div class="text-3xl font-bold text-green-500">1.4B+</div>
+                            <p class="text-gray-400 text-sm">People to feed daily</p>
+                        </div>
+                        <div class="bg-gray-800 rounded-xl p-4 text-center">
+                            <div class="text-3xl font-bold text-green-500">58%</div>
+                            <p class="text-gray-400 text-sm">Population depends on farming</p>
+                        </div>
+                        <div class="bg-gray-800 rounded-xl p-4 text-center">
+                            <div class="text-3xl font-bold text-green-500">195M</div>
+                            <p class="text-gray-400 text-sm">Hectares cultivated land</p>
+                        </div>
+                        <div class="bg-gray-800 rounded-xl p-4 text-center">
+                            <div class="text-3xl font-bold text-green-500">3rd</div>
+                            <p class="text-gray-400 text-sm">Largest farm producer globally</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="order-1 md:order-2" data-aos="fade-left">
+                    <span class="text-green-500 font-semibold text-lg">NECESSITY</span>
+                    <h2 class="text-3xl md:text-4xl font-bold text-white mt-2 mb-4">Can We Survive Without Farming?</h2>
+                    <p class="text-gray-300 leading-relaxed mb-4">
+                        Without farming, there would be no food. Without food, there is no life. 
+                        Farming is not an option - it's a necessity for human survival. Every grain 
+                        of rice, every vegetable, every piece of fruit comes from the hard work of farmers.
+                    </p>
+                    <p class="text-gray-300 leading-relaxed">
+                        As the global population grows to 9.7 billion by 2050, farming will become 
+                        even more critical. We need 70% more food production to feed the world.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- History of Indian Farming -->
+    <section class="py-16 bg-gray-950">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12" data-aos="fade-up">
+                <span class="text-green-500 font-semibold text-lg">HISTORY</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-white mt-2">Journey of Indian Agriculture</h2>
+                <p class="text-gray-400 mt-4 max-w-2xl mx-auto">From Indus Valley to Green Revolution to Digital Farming</p>
+            </div>
+
+            <!-- Timeline -->
+            <div class="relative">
+                <!-- Timeline Line -->
+                <div class="absolute left-4 md:left-1/2 top-0 bottom-0 w-0.5 bg-green-500/30"></div>
+
+                <!-- Event 1 -->
+                <div class="relative mb-12 flex flex-col md:flex-row md:justify-between items-start" data-aos="fade-right">
+                    <div class="md:w-5/12 pl-10 md:pl-0 md:text-right mb-4 md:mb-0">
+                        <span class="inline-block bg-green-900 text-green-400 px-3 py-1 rounded-full text-sm font-semibold">~9000 BCE</span>
+                        <h3 class="text-white font-bold text-xl mt-2">Indus Valley Civilization</h3>
+                        <p class="text-gray-400 text-sm mt-2">Earliest evidence of farming in India. Cultivation of wheat, barley, cotton, and dates. Domesticated cattle, sheep, and goats.</p>
+                    </div>
+                    <div class="absolute left-0 md:left-1/2 w-8 h-8 rounded-full bg-green-500 flex items-center justify-center -translate-x-1/2">
+                        <i class="fas fa-tractor text-white text-xs"></i>
+                    </div>
+                    <div class="md:w-5/12"></div>
+                </div>
+
+                <!-- Event 2 -->
+                <div class="relative mb-12 flex flex-col md:flex-row md:justify-between items-start" data-aos="fade-left">
+                    <div class="md:w-5/12"></div>
+                    <div class="absolute left-0 md:left-1/2 w-8 h-8 rounded-full bg-green-500 flex items-center justify-center -translate-x-1/2">
+                        <i class="fas fa-seedling text-white text-xs"></i>
+                    </div>
+                    <div class="md:w-5/12 pl-10 md:pl-0">
+                        <span class="inline-block bg-green-900 text-green-400 px-3 py-1 rounded-full text-sm font-semibold">1500 BCE - 500 CE</span>
+                        <h3 class="text-white font-bold text-xl mt-2">Vedic Period</h3>
+                        <p class="text-gray-400 text-sm mt-2">Advancement in irrigation, crop rotation, and use of manure. Rice and sugarcane cultivation began.</p>
+                    </div>
+                </div>
+
+                <!-- Event 3 -->
+                <div class="relative mb-12 flex flex-col md:flex-row md:justify-between items-start" data-aos="fade-right">
+                    <div class="md:w-5/12 pl-10 md:pl-0 md:text-right mb-4 md:mb-0">
+                        <span class="inline-block bg-green-900 text-green-400 px-3 py-1 rounded-full text-sm font-semibold">1526 - 1857 CE</span>
+                        <h3 class="text-white font-bold text-xl mt-2">Mughal Era</h3>
+                        <p class="text-gray-400 text-sm mt-2">Introduction of new crops like tobacco, maize, and indigo. Advanced irrigation systems (canals, wells).</p>
+                    </div>
+                    <div class="absolute left-0 md:left-1/2 w-8 h-8 rounded-full bg-green-500 flex items-center justify-center -translate-x-1/2">
+                        <i class="fas fa-water text-white text-xs"></i>
+                    </div>
+                    <div class="md:w-5/12"></div>
+                </div>
+
+                <!-- Event 4 -->
+                <div class="relative mb-12 flex flex-col md:flex-row md:justify-between items-start" data-aos="fade-left">
+                    <div class="md:w-5/12"></div>
+                    <div class="absolute left-0 md:left-1/2 w-8 h-8 rounded-full bg-green-500 flex items-center justify-center -translate-x-1/2">
+                        <i class="fas fa-leaf text-white text-xs"></i>
+                    </div>
+                    <div class="md:w-5/12 pl-10 md:pl-0">
+                        <span class="inline-block bg-green-900 text-green-400 px-3 py-1 rounded-full text-sm font-semibold">1960s</span>
+                        <h3 class="text-white font-bold text-xl mt-2">Green Revolution</h3>
+                        <p class="text-gray-400 text-sm mt-2">Introduction of high-yield variety seeds, fertilizers, and modern equipment. India became self-sufficient in food grain production.</p>
+                    </div>
+                </div>
+
+                <!-- Event 5 -->
+                <div class="relative flex flex-col md:flex-row md:justify-between items-start" data-aos="fade-right">
+                    <div class="md:w-5/12 pl-10 md:pl-0 md:text-right mb-4 md:mb-0">
+                        <span class="inline-block bg-green-900 text-green-400 px-3 py-1 rounded-full text-sm font-semibold">2000 - Present</span>
+                        <h3 class="text-white font-bold text-xl mt-2">Digital Farming Era</h3>
+                        <p class="text-gray-400 text-sm mt-2">AI, IoT, drones, and mobile apps transforming agriculture. Precision farming, eNAM, and agri-tech platforms like AgriBot.</p>
+                    </div>
+                    <div class="absolute left-0 md:left-1/2 w-8 h-8 rounded-full bg-green-500 flex items-center justify-center -translate-x-1/2">
+                        <i class="fas fa-microchip text-white text-xs"></i>
+                    </div>
+                    <div class="md:w-5/12"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+   
+  <!-- Types of Farming in India -->
+<section class="py-16 bg-gray-900">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12" data-aos="fade-up">
+            <span class="text-green-500 font-semibold text-lg">FARMING METHODS</span>
+            <h2 class="text-3xl md:text-4xl font-bold text-white mt-2">Types of Farming in India</h2>
+            <p class="text-gray-400 mt-4 max-w-2xl mx-auto">Different farming practices across our diverse nation</p>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 card-hover" data-aos="fade-up" data-aos-delay="100">
+                <div class="w-14 h-14 bg-green-900/50 rounded-2xl flex items-center justify-center mb-4">
+                    <i class="fas fa-tractor text-2xl text-green-400"></i>
+                </div>
+                <h3 class="text-white font-bold text-xl mb-2">Subsistence Farming</h3>
+                <p class="text-gray-400 text-sm">Majority of Indian farmers practice this. Growing food primarily for family consumption with little surplus for sale. Found in rain-fed and remote areas.</p>
+            </div>
+            <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 card-hover" data-aos="fade-up" data-aos-delay="200">
+                <div class="w-14 h-14 bg-blue-900/50 rounded-2xl flex items-center justify-center mb-4">
+                    <i class="fas fa-chart-line text-2xl text-blue-400"></i>
+                </div>
+                <h3 class="text-white font-bold text-xl mb-2">Commercial Farming</h3>
+                <p class="text-gray-400 text-sm">Large-scale crop production for sale in markets. Cash crops like sugarcane, cotton, wheat, and rice. Uses modern equipment and technology.</p>
+            </div>
+            <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 card-hover" data-aos="fade-up" data-aos-delay="300">
+                <div class="w-14 h-14 bg-green-900/50 rounded-2xl flex items-center justify-center mb-4">
+                    <i class="fas fa-leaf text-2xl text-green-400"></i>
+                </div>
+                <h3 class="text-white font-bold text-xl mb-2">Organic Farming</h3>
+                <p class="text-gray-400 text-sm">No chemical fertilizers or pesticides. Uses natural compost, manure, and biological pest control. Growing rapidly due to health awareness.</p>
+            </div>
+            <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 card-hover" data-aos="fade-up" data-aos-delay="400">
+                <div class="w-14 h-14 bg-purple-900/50 rounded-2xl flex items-center justify-center mb-4">
+                    <i class="fas fa-microchip text-2xl text-purple-400"></i>
+                </div>
+                <h3 class="text-white font-bold text-xl mb-2">Precision Farming</h3>
+                <p class="text-gray-400 text-sm">Uses GPS, sensors, and AI to optimize water, fertilizer, and pesticide use. Data-driven decisions for maximum yield with minimum input.</p>
+            </div>
+            <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 card-hover" data-aos="fade-up" data-aos-delay="500">
+                <div class="w-14 h-14 bg-yellow-900/50 rounded-2xl flex items-center justify-center mb-4">
+                    <i class="fas fa-water text-2xl text-yellow-400"></i>
+                </div>
+                <h3 class="text-white font-bold text-xl mb-2">Irrigated Farming</h3>
+                <p class="text-gray-400 text-sm">Relies on canals, tube wells, and dams. Allows multiple crops per year. Common in Punjab, Haryana, and Western UP.</p>
+            </div>
+            <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 card-hover" data-aos="fade-up" data-aos-delay="600">
+                <div class="w-14 h-14 bg-red-900/50 rounded-2xl flex items-center justify-center mb-4">
+                    <i class="fas fa-cloud-rain text-2xl text-red-400"></i>
+                </div>
+                <h3 class="text-white font-bold text-xl mb-2">Rain-fed Farming</h3>
+                <p class="text-gray-400 text-sm">Depends entirely on monsoon rains. Practiced in dry regions like Rajasthan, Maharashtra, and parts of Karnataka. High risk but essential.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Farming Challenges in India -->
+<section class="py-16 bg-gray-950">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12" data-aos="fade-up">
+            <span class="text-red-500 font-semibold text-lg">REAL ISSUES</span>
+            <h2 class="text-3xl md:text-4xl font-bold text-white mt-2">Farming Challenges in India</h2>
+            <p class="text-gray-400 mt-4 max-w-2xl mx-auto">Understanding problems to find better solutions</p>
+        </div>
+        <div class="grid md:grid-cols-2 gap-6">
+            <div class="bg-red-900/20 rounded-xl p-6 border border-red-800/30" data-aos="fade-right">
+                <div class="flex items-center gap-3 mb-4">
+                    <i class="fas fa-hand-holding-usd text-red-400 text-2xl"></i>
+                    <h3 class="text-white font-bold text-xl">Economic Challenges</h3>
+                </div>
+                <ul class="space-y-3 text-gray-300">
+                    <li class="flex items-start gap-3"><i class="fas fa-times-circle text-red-400 mt-1 text-sm"></i> <span>Small & fragmented landholdings (85% farmers have less than 2 hectares)</span></li>
+                    <li class="flex items-start gap-3"><i class="fas fa-times-circle text-red-400 mt-1 text-sm"></i> <span>Exploitation by middlemen - farmers get only 15-20% of consumer price</span></li>
+                    <li class="flex items-start gap-3"><i class="fas fa-times-circle text-red-400 mt-1 text-sm"></i> <span>High debt burden - many farmers depend on local moneylenders at 24%+ interest</span></li>
+                    <li class="flex items-start gap-3"><i class="fas fa-times-circle text-red-400 mt-1 text-sm"></i> <span>Lack of access to institutional credit and insurance</span></li>
+                </ul>
+            </div>
+            <div class="bg-blue-900/20 rounded-xl p-6 border border-blue-800/30" data-aos="fade-left">
+                <div class="flex items-center gap-3 mb-4">
+                    <i class="fas fa-tint text-blue-400 text-2xl"></i>
+                    <h3 class="text-white font-bold text-xl">Environmental & Infrastructure</h3>
+                </div>
+                <ul class="space-y-3 text-gray-300">
+                    <li class="flex items-start gap-3"><i class="fas fa-times-circle text-blue-400 mt-1 text-sm"></i> <span>Water scarcity - 54% of India faces high to extreme water stress</span></li>
+                    <li class="flex items-start gap-3"><i class="fas fa-times-circle text-blue-400 mt-1 text-sm"></i> <span>Lack of proper cold storage - 30-40% post-harvest losses</span></li>
+                    <li class="flex items-start gap-3"><i class="fas fa-times-circle text-blue-400 mt-1 text-sm"></i> <span>Soil degradation due to overuse of chemicals</span></li>
+                    <li class="flex items-start gap-3"><i class="fas fa-times-circle text-blue-400 mt-1 text-sm"></i> <span>Limited access to modern equipment and technology</span></li>
+                </ul>
+            </div>
+        </div>
+        <div class="mt-6 bg-yellow-900/20 rounded-xl p-5 border border-yellow-800/30 text-center" data-aos="fade-up">
+            <i class="fas fa-lightbulb text-yellow-400 text-xl mr-2"></i>
+        </div>
+    </div>
+</section>
+
+<!-- Organic vs Chemical Farming -->
+<section class="py-16 bg-gray-900">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12" data-aos="fade-up">
+            <span class="text-green-500 font-semibold text-lg">CHOOSE WISELY</span>
+            <h2 class="text-3xl md:text-4xl font-bold text-white mt-2">Organic vs Chemical Farming</h2>
+            <p class="text-gray-400 mt-4 max-w-2xl mx-auto">Understanding the impact on health, environment, and yields</p>
+        </div>
+        <div class="grid md:grid-cols-2 gap-8">
+            <!-- Organic Column -->
+            <div class="bg-green-900/20 rounded-2xl p-6 border border-green-700/30" data-aos="fade-right">
+                <div class="flex items-center gap-3 mb-5 pb-3 border-b border-green-700/30">
+                    <i class="fas fa-check-circle text-green-400 text-2xl"></i>
+                    <h3 class="text-white font-bold text-2xl">Organic Farming</h3>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <h4 class="text-green-400 font-semibold mb-2">✅ Advantages</h4>
+                        <ul class="text-gray-300 text-sm space-y-1 ml-4">
+                            <li>• No chemical residues - healthier food</li>
+                            <li>• Improves soil health and biodiversity</li>
+                            <li>• Higher market price (20-50% premium)</li>
+                            <li>• Environmentally sustainable</li>
+                            <li>• Lower input costs in long term</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-red-400 font-semibold mb-2">❌ Disadvantages</h4>
+                        <ul class="text-gray-300 text-sm space-y-1 ml-4">
+                            <li>• Lower initial yields (10-20% less)</li>
+                            <li>• More labor-intensive</li>
+                            <li>• Requires organic certification</li>
+                            <li>• Pest control is challenging</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- Chemical Column -->
+            <div class="bg-red-900/20 rounded-2xl p-6 border border-red-700/30" data-aos="fade-left">
+                <div class="flex items-center gap-3 mb-5 pb-3 border-b border-red-700/30">
+                    <i class="fas fa-flask text-red-400 text-2xl"></i>
+                    <h3 class="text-white font-bold text-2xl">Chemical Farming</h3>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <h4 class="text-green-400 font-semibold mb-2">✅ Advantages</h4>
+                        <ul class="text-gray-300 text-sm space-y-1 ml-4">
+                            <li>• Higher yields per acre</li>
+                            <li>• Quick pest and disease control</li>
+                            <li>• Less labor required</li>
+                            <li>• Easier to scale commercially</li>
+                            <li>• Consistent crop quality</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-red-400 font-semibold mb-2">❌ Disadvantages</h4>
+                        <ul class="text-gray-300 text-sm space-y-1 ml-4">
+                            <li>• Chemical residues in food</li>
+                            <li>• Soil degradation over time</li>
+                            <li>• Water pollution and health risks</li>
+                            <li>• High input costs (fertilizers, pesticides)</li>
+                            <li>• Long-term environmental damage</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mt-8 bg-gray-800 rounded-xl p-5 text-center" data-aos="fade-up">
+            <p class="text-gray-300 text-sm">
+                <i class="fas fa-seedling text-green-400 mr-2"></i> 
+                <span class="font-semibold">Best Approach:</span> Integrated farming - using organic methods with minimal, targeted chemical use for optimal results.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Climate Change and Farming -->
+<section class="py-16 bg-gray-950">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12" data-aos="fade-up">
+            <span class="text-cyan-500 font-semibold text-lg">CLIMATE CRISIS</span>
+            <h2 class="text-3xl md:text-4xl font-bold text-white mt-2">How Climate Change Affects Farming</h2>
+            <p class="text-gray-400 mt-4 max-w-2xl mx-auto">Farmers are on the frontline of climate change</p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-6">
+            <div class="bg-cyan-900/20 rounded-xl p-6 border border-cyan-800/30 text-center" data-aos="fade-up" data-aos-delay="100">
+                <div class="w-16 h-16 bg-cyan-900/50 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-temperature-high text-2xl text-cyan-400"></i>
+                </div>
+                <h3 class="text-white font-bold text-lg mb-2">Rising Temperatures</h3>
+                <p class="text-gray-400 text-sm">Heat stress reduces wheat and rice yields by 10-15%. Every 1°C rise cuts production by 6-8%.</p>
+            </div>
+            <div class="bg-blue-900/20 rounded-xl p-6 border border-blue-800/30 text-center" data-aos="fade-up" data-aos-delay="200">
+                <div class="w-16 h-16 bg-blue-900/50 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-cloud-rain text-2xl text-blue-400"></i>
+                </div>
+                <h3 class="text-white font-bold text-lg mb-2">Erratic Monsoons</h3>
+                <p class="text-gray-400 text-sm">Unpredictable rainfall causes droughts or floods. 60% of Indian farms depend on monsoon.</p>
+            </div>
+            <div class="bg-yellow-900/20 rounded-xl p-6 border border-yellow-800/30 text-center" data-aos="fade-up" data-aos-delay="300">
+                <div class="w-16 h-16 bg-yellow-900/50 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-wind text-2xl text-yellow-400"></i>
+                </div>
+                <h3 class="text-white font-bold text-lg mb-2">Extreme Weather</h3>
+                <p class="text-gray-400 text-sm">Cyclones, hailstorms, and unseasonal rains destroy standing crops instantly.</p>
+            </div>
+        </div>
+        <div class="mt-8 grid md:grid-cols-2 gap-6">
+            <div class="bg-gray-800 rounded-xl p-5" data-aos="fade-right">
+                <h3 class="text-white font-bold mb-3 flex items-center gap-2"><i class="fas fa-chart-line text-red-400"></i> Impact on Indian Agriculture</h3>
+                <ul class="space-y-2 text-gray-300 text-sm">
+                    <li>• <span class="font-semibold">Wheat:</span> Could decline by 30-50% by 2050</li>
+                    <li>• <span class="font-semibold">Rice:</span> 10-20% yield reduction in coastal areas</li>
+                    <li>• <span class="font-semibold">Sugarcane:</span> 25-30% decline in productivity</li>
+                    <li>• <span class="font-semibold">Groundwater:</span> Depleting 4x faster than recharge rate</li>
+                </ul>
+            </div>
+            <div class="bg-green-900/20 rounded-xl p-5" data-aos="fade-left">
+                <h3 class="text-white font-bold mb-3 flex items-center gap-2"><i class="fas fa-lightbulb text-green-400"></i> Solutions for Farmers</h3>
+                <ul class="space-y-2 text-gray-300 text-sm">
+                    <li>• Use weather forecasts from <span class="text-green-400">IMD</span> and AgriBot</li>
+                    <li>• Adopt drought-resistant crop varieties</li>
+                    <li>• Implement micro-irrigation (drip/sprinkler)</li>
+                    <li>• Practice crop diversification</li>
+                    <li>• Access crop insurance through <span class="text-green-400">PMFBY</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>  
+
+    <!-- Modern Farming with AgriBot -->
+    <section class="py-16 bg-gradient-to-r from-green-900 to-green-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center" data-aos="fade-up">
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Farming is Changing. Are You Ready?</h2>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="{{ url_for('auth.login') }}" class="bg-white text-green-700 px-8 py-3 rounded-full hover:bg-gray-100 transition font-semibold shadow-lg inline-flex items-center justify-center">
+                    <i class="fas fa-rocket mr-2"></i> Start Smart Farming
+                </a>
+                <a href="/crops" class="bg-transparent border-2 border-white text-white px-8 py-3 rounded-full hover:bg-white/10 transition font-semibold inline-flex items-center justify-center">
+                    <i class="fas fa-leaf mr-2"></i> Explore Crops
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fun Facts Section -->
+    <section class="py-16 bg-gray-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-10" data-aos="fade-up">
+                <span class="text-green-500 font-semibold text-lg">DID YOU KNOW?</span>
+                <h2 class="text-3xl font-bold text-white mt-2">Amazing Farming Facts</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div class="flex items-start gap-3 bg-gray-800 rounded-xl p-4" data-aos="fade-up" data-aos-delay="100">
+                    <i class="fas fa-cow text-green-400 text-2xl"></i>
+                    <p class="text-gray-300 text-sm">India is the world's largest producer of milk, producing over 200 million tonnes annually.</p>
+                </div>
+                <div class="flex items-start gap-3 bg-gray-800 rounded-xl p-4" data-aos="fade-up" data-aos-delay="200">
+                    <i class="fas fa-pepper-hot text-green-400 text-2xl"></i>
+                    <p class="text-gray-300 text-sm">India is the largest producer, consumer, and exporter of spices in the world.</p>
+                </div>
+                <div class="flex items-start gap-3 bg-gray-800 rounded-xl p-4" data-aos="fade-up" data-aos-delay="300">
+                    <i class="fas fa-fish text-green-400 text-2xl"></i>
+                    <p class="text-gray-300 text-sm">India is the 2nd largest fish producer and 2nd largest agricultural land holder globally.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="py-16 bg-gray-950">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" data-aos="fade-up">
+            <h2 class="text-3xl font-bold text-white mb-3">Respect the Farmer. Respect the Food.</h2>
+            <p class="text-gray-400 mb-6">Every meal you eat is a blessing from a farmer's hard work.</p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <span class="bg-gray-800 px-4 py-2 rounded-full text-green-400 text-sm"><i class="fas fa-tractor mr-1"></i> Annadata</span>
+                <span class="bg-gray-800 px-4 py-2 rounded-full text-green-400 text-sm"><i class="fas fa-seedling mr-1"></i> Sukhibhava</span>
+                <span class="bg-gray-800 px-4 py-2 rounded-full text-green-400 text-sm"><i class="fas fa-heart mr-1"></i> Jai Kisan</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer - Compact Version -->
+    <footer class="bg-gray-950 border-t border-gray-800 py-8">
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+
+        <!-- Logo -->
+        <div class="text-center md:text-left">
+
+            <div class="flex items-center justify-center md:justify-start space-x-2">
+                <i class="fas fa-seedling text-2xl text-green-500"></i>
+
+                <span class="text-2xl font-bold text-white">
+                    Agri<span class="text-green-500">Bot</span>
+                </span>
+            </div>
+
+            <p class="text-gray-400 text-sm mt-2">
+                Smart agriculture powered by AI technology.
+            </p>
+
+        </div>
+
+        <!-- Navigation -->
+        <div class="flex flex-wrap justify-center gap-6 text-sm">
+
+            <a href="/" class="text-gray-400 hover:text-green-500 transition">
+                Home
+            </a>
+
+            <a href="/crops" class="text-gray-400 hover:text-green-500 transition">
+                Crops
+            </a>
+
+            <a href="/AI" class="text-gray-400 hover:text-green-500 transition">
+                AI Analysis
+            </a>
+
+            <a href="/agrimarket" class="text-gray-400 hover:text-green-500 transition">
+                Marketplace
+            </a>
+
+        </div>
+
+        <!-- Social -->
+        <div class="flex space-x-4">
+
+            <a href="#" class="text-gray-400 hover:text-green-500 text-lg transition">
+                <i class="fab fa-github"></i>
+            </a>
+
+            <a href="https://www.linkedin.com/in/bhairavsinh-devda/" target="_blank" class="text-gray-400 hover:text-green-500 text-lg transition">
+                <i class="fab fa-linkedin"></i>
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- Bottom -->
+    <div class="border-t border-gray-800 mt-6 pt-6 text-center">
+
+        <p class="text-gray-500 text-sm">
+            © 2026 AgriBot • Built by Team AgriBot. All rights reserved.  
+        </p>
+
+    </div>
+
+</div>
+
+</footer>
+
+    {% include 'profile.html' %}
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 800, once: true, offset: 100 });
+
+        window.addEventListener("scroll", () => {
+            const nav = document.querySelector("nav");
+            if (window.scrollY > 50) nav.classList.add("shadow-2xl");
+            else nav.classList.remove("shadow-2xl");
+        });
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+    </script>
+</body>
+</html>
