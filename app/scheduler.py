@@ -31,7 +31,7 @@ def cleanup_old_images():
 
             days_old = file_age / (60 * 60 * 24)
 
-            # Delete after 1 minute
+            # Delete after 3 days
             if days_old > 3:
 
                 image_url = f"/static/uploads/chat_images/{filename}"
@@ -60,11 +60,11 @@ def start_scheduler():
 
     scheduler = BackgroundScheduler()
 
-    # Run every 1 minute
+    # Run every 60 minute
     scheduler.add_job(
         cleanup_old_images,
         'interval',
-        minutes=1
+        minutes=60
     )
 
     scheduler.start()
