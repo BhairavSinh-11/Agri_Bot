@@ -16,8 +16,6 @@ services:
   env_file:
   - .env
   
-  command: gunicorn --bind
-
 
 #Nginx service
 
@@ -32,4 +30,4 @@ services:
       - "80:80"
 
     depends_on:
-      - web
+      - flask_app
