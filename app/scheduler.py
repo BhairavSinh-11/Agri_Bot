@@ -6,6 +6,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from .models import Chat
 from . import db
 
+#this is used to cleanup old images from uploads folder and also delete related chat from db after 3 days to save storage space. This function is scheduled to run every 60 minutes using APScheduler in __init__.py
 
 def cleanup_old_images():
 
