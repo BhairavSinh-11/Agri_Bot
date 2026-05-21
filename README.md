@@ -1,6 +1,6 @@
 <div align="center">
 
-<h1>🌱 AgriBot – AI Powered Smart Agriculture Platform</h1>
+<h1>🌱 AgriBot –END-TO-END Project with Docker, Nginx, AWS and HTTPS</h1>
 
 <h3>🚜 AI-powered agriculture assistant for smart farming solutions</h3>
 
