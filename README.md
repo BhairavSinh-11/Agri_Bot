@@ -127,4 +127,9 @@ SQLALCHEMY_DATABASE_URI=your_database_uri
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
 
+<h2>🌍 Deployment</h2> <p>The project is production-ready with:</p> <ul> <li>✅ Docker Compose</li> <li>✅ Nginx Reverse Proxy</li> <li>✅ Gunicorn WSGI Server</li> <li>✅ HTTPS SSL Configuration</li> <li>✅ AWS EC2 Deployment</li> </ul>
+<h2>🔒 HTTPS & Security</h2> <ul> <li>🔐 SSL Certificates via Let's Encrypt</li> <li>🛡️ Secure Reverse Proxy Configuration</li> <li>↪️ HTTP → HTTPS Redirection</li> <li>🚫 Protected Admin Routes</li> <li>🔑 OAuth Secure Authentication</li> </ul>
+<h2>⭐ Support</h2> <p>If you like this project:</p> <ul> <li>🌟 Star this repository</li> <li>🍴 Fork the project</li> <li>📢 Share feedback & suggestions</li> </ul>
+<div align="center"> <h3>🌱 Built for Smart Farming & Modern Agriculture 🚜</h3> </div> ```
+
 GEMINI_API_KEY=your_gemini_api_key
