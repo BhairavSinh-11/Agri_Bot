@@ -1,6 +1,6 @@
-<div align="center">🌱 AgriBot – AI Powered Smart Agriculture Platform
+<h2><div align="center">🌱 AgriBot – AI Powered Smart Agriculture Platform
 
-
+</h2>
 
 
 
@@ -12,8 +12,8 @@
 
 </div>
 
-🚜 AI-powered agriculture assistant for smart farming solutions
-
+<h4>🚜 AI-powered agriculture assistant for smart farming solutions
+</h4>
 
 # 🌐 Live Demo
 
