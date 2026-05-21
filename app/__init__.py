@@ -5,6 +5,7 @@ from flask_login import LoginManager
 from dotenv import load_dotenv
 import os
 from .extension import oauth
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 load_dotenv()
 
@@ -18,6 +19,11 @@ login_manager = LoginManager()
 
 def create_app():
     app = Flask(__name__)
+    app.wsgi_app = ProxyFix(
+        app.wsgi_app,
+        x_proto=1,
+        x_host=1
+    )
     app.config['SECRET_KEY'] = SECRET_KEY
     app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 
