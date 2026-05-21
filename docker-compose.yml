@@ -13,8 +13,8 @@ services:
   volumes:
    - .:/app
   
-  environment:
-    ../.env
+  env_file:
+  - .env
   
   command: gunicorn --bind
 
