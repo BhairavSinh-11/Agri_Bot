@@ -22,7 +22,7 @@ services:
 #Nginx service
 
 
-  nginx:
+ nginx:
 
     build: ./nginx
 
