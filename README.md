@@ -1,5 +1,4 @@
-🌱 AgriBot – AI Powered Smart Agriculture Platform
-<div align="center">
+<div align="center">🌱 AgriBot – AI Powered Smart Agriculture Platform
 
 
 
@@ -11,9 +10,10 @@
 
 
 
+</div>
 
 🚜 AI-powered agriculture assistant for smart farming solutions
-</div>
+
 
 # 🌐 Live Demo
 
@@ -41,18 +41,26 @@
 ✅ Domain Access > agribot.sbs
 
 🛠️ Tech Stack
+
 Backend
+
 Python
 Flask
 SQLAlchemy
+
 Frontend
+
 HTML
-Tailwind CSS
+CSS
 JavaScript
+
 AI & Authentication
+
 Google Gemini API
 Google OAuth
+
 DevOps & Deployment
+
 Docker
 Docker Compose
 Nginx
@@ -61,6 +69,7 @@ AWS EC2
 HTTPS / SSL
 
 📸 Core Functionalities
+
 🌿 AI Crop Analysis
 
 Upload crop images and receive intelligent AI-powered agricultural insights and disease detection.
