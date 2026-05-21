@@ -14,7 +14,8 @@
 
 </div>
 <p align="center">
-🚧 The live demo may sometimes be unavailable because the AWS server could be paused to reduce hosting costs.Its an project Hosted on AWS EC2 server so it occasionally be offline due to infrastructure cost optimization.
+🚧 The live demo may sometimes be unavailable because the AWS server could be paused to reduce hosting costs. Its an project Hosted on AWS EC2 server so it occasionally be offline due to infrastructure cost optimization.
+However , you can clone this Project and Understand its Functionality ! 
 </p>
 
 ---
