@@ -29,5 +29,8 @@ services:
     ports:
       - "80:80"
 
+    volumes:
+      - ./app/static:/app/app/static
+      
     depends_on:
       - flask_app
