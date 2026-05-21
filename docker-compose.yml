@@ -1,0 +1,35 @@
+services:
+
+# Flask application service
+ flask_app:
+  
+  build: .
+  
+  container_name: agribot_web
+  
+  ports:
+   - "2423:2423"
+  
+  volumes:
+   - .:/app
+  
+  environment:
+    ../.env
+  
+  command: gunicorn --bind
+
+
+#Nginx service
+
+
+  nginx:
+
+    build: ./nginx
+
+    container_name: agribot_nginx
+
+    ports:
+      - "80:80"
+
+    depends_on:
+      - web
