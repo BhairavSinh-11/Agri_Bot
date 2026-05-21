@@ -1,109 +1,125 @@
-<h2><div align="center">🌱 AgriBot – AI Powered Smart Agriculture Platform
-
-</h2>
-
-
-
-
-
-
-
-
-
-</div>
-
-<h4>🚜 AI-powered agriculture assistant for smart farming solutions
-</h4>
-
-# 🌐 Live Demo
-
 <div align="center">
 
-[![Live Website](https://img.shields.io/badge/Visit-AgriBot-success?style=for-the-badge&logo=google-chrome)](https://agribot.sbs)
+<h1>🌱 AgriBot – AI Powered Smart Agriculture Platform</h1>
 
-### 🔗 https://agribot.sbs
+<h3>🚜 AI-powered agriculture assistant for smart farming solutions</h3>
+
+<br>
+
+<a href="https://agribot.sbs">
+  <img src="https://img.shields.io/badge/Visit-AgriBot-success?style=for-the-badge&logo=google-chrome" alt="Live Website">
+</a>
+
+<h3>🔗 https://agribot.sbs</h3>
 
 </div>
 
-✨ Features
+---
 
-✅ Smart Agriculture Chat Assistant
-✅ Google OAuth Authentication
-✅ Secure User Authentication System
-✅ Chat History Management
-✅ Image Upload Support
-✅ Admin Dashboard
-✅ Responsive Modern UI
-✅ HTTPS + SSL Deployment
-✅ Dockerized Production Setup
-✅ Nginx Reverse Proxy & Caching
-✅ AWS EC2 Deployment
-✅ Domain Access > agribot.sbs
+<h2>✨ Features</h2>
 
-🛠️ Tech Stack
+<ul>
+  <li>✅ Smart Agriculture Chat Assistant</li>
+  <li>✅ Google OAuth Authentication</li>
+  <li>✅ Secure User Authentication System</li>
+  <li>✅ Chat History Management</li>
+  <li>✅ Image Upload Support</li>
+  <li>✅ Admin Dashboard</li>
+  <li>✅ Responsive Modern UI</li>
+  <li>✅ HTTPS + SSL Deployment</li>
+  <li>✅ Dockerized Production Setup</li>
+  <li>✅ Nginx Reverse Proxy & Caching</li>
+  <li>✅ AWS EC2 Deployment</li>
+  <li>✅ Domain Access → <strong>agribot.sbs</strong></li>
+</ul>
 
-Backend
+---
 
-Python
-Flask
-SQLAlchemy
+<h2>🛠️ Tech Stack</h2>
 
-Frontend
+<h3>⚙️ Backend</h3>
 
-HTML
-CSS
-JavaScript
+<ul>
+  <li>Python</li>
+  <li>Flask</li>
+  <li>SQLAlchemy</li>
+</ul>
 
-AI & Authentication
+<h3>🎨 Frontend</h3>
 
-Google Gemini API
-Google OAuth
+<ul>
+  <li>HTML</li>
+  <li>CSS</li>
+  <li>JavaScript</li>
+</ul>
 
-DevOps & Deployment
+<h3>🤖 AI & Authentication</h3>
 
-Docker
-Docker Compose
-Nginx
-Gunicorn
-AWS EC2
-HTTPS / SSL
+<ul>
+  <li>Google Gemini API</li>
+  <li>Google OAuth</li>
+</ul>
 
-📸 Core Functionalities
+<h3>☁️ DevOps & Deployment</h3>
 
-🌿 AI Crop Analysis
+<ul>
+  <li>Docker</li>
+  <li>Docker Compose</li>
+  <li>Nginx</li>
+  <li>Gunicorn</li>
+  <li>AWS EC2</li>
+  <li>HTTPS / SSL</li>
+</ul>
 
-Upload crop images and receive intelligent AI-powered agricultural insights and disease detection.
+---
 
-🤖 Smart Farming Assistant
+<h2>📸 Core Functionalities</h2>
 
-Interactive chatbot providing:
+<h3>🌿 AI Crop Analysis</h3>
 
-crop information
-farming guidance
-agricultural recommendations
-smart farming support
+<p>
+Upload crop images and receive AI-powered agricultural insights,
+crop analysis, and disease detection support.
+</p>
 
-🔐 Secure Authentication
+<h3>🤖 Smart Farming Assistant</h3>
 
-User Registration & Login
-Google OAuth Login
-Session-based Authentication
-Admin Access Control
+<p>Interactive chatbot providing:</p>
 
-☁️ Cloud Deployment
+<ul>
+  <li>🌾 Crop information</li>
+  <li>📖 Farming guidance</li>
+  <li>💡 Agricultural recommendations</li>
+  <li>🚜 Smart farming support</li>
+</ul>
 
-Fully deployed using:
+<h3>🔐 Secure Authentication</h3>
 
-Docker containers
-Nginx reverse proxy
-Gunicorn
-AWS EC2
+<ul>
+  <li>User Registration & Login</li>
+  <li>Google OAuth Login</li>
+  <li>Session-based Authentication</li>
+  <li>Admin Access Control</li>
+</ul>
 
+<h3>☁️ Cloud Deployment</h3>
 
-⚙️ Environment Variables
+<p>Fully deployed using:</p>
 
-Create a .env file:
+<ul>
+  <li>🐳 Docker Containers</li>
+  <li>⚡ Nginx Reverse Proxy</li>
+  <li>🚀 Gunicorn WSGI Server</li>
+  <li>🖥️ AWS EC2</li>
+</ul>
 
+---
+
+<h2>⚙️ Environment Variables</h2>
+
+<p>Create a <code>.env</code> file:</p>
+
+```env
 SECRET_KEY=your_secret_key
 
 SQLALCHEMY_DATABASE_URI=your_database_uri
@@ -112,30 +128,3 @@ GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
 
 GEMINI_API_KEY=your_gemini_api_key
-
-
-🌍 Deployment
-
-The project is production-ready with:
-
-✅ Docker Compose
-✅ Nginx Reverse Proxy
-✅ Gunicorn WSGI Server
-✅ HTTPS SSL Configuration
-✅ AWS EC2 Deployment
-
-🔒 HTTPS & Security
-SSL Certificates via Let's Encrypt
-Secure Reverse Proxy Configuration
-HTTP → HTTPS Redirection
-Protected Admin Routes
-OAuth Secure Authentication
-
-
-⭐ Support
-
-If you like this project:
-
-🌟 Star this repository
-🍴 Fork the project
-📢 Share feedback & suggestions
