@@ -13,6 +13,9 @@
 <h3>🔗 https://agribot.sbs</h3>
 
 </div>
+<p align="center">
+🚧 The live demo may sometimes be unavailable because the AWS server could be paused to reduce hosting costs.
+</p>
 
 ---
 
