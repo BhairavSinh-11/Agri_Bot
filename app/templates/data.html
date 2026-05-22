@@ -126,9 +126,8 @@
     <div class="header">
         <h2 class="text-2xl font-bold text-green-400">Admin Dashboard</h2>
 
-        <div class="flex gap-2">
-            <a href="{{ url_for('main.home') }}" class="btn-secondary">Home</a>
-            <a href="{{ url_for('auth.logout') }}" class="btn-primary">Logout</a>
+        <div class="flex gap-2 text-sm text-white-600">
+            <a href="/logout" class="block text-center bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-700">Logout</a>
         </div>
     </div>
 
