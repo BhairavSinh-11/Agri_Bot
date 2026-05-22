@@ -141,9 +141,6 @@ def about():
 @csrf.exempt
 @login_required
 def chat_assistant():
-
-    cleanup_old_images()
-
     try:
         user_message=request.form.get('message')
         image = request.files.get('image')
@@ -274,54 +271,3 @@ def delete_chat(chat_id):
     db.session.commit()
 
     return jsonify({"success": True})
-
-
-#image cleanup function to delete old images after 1 minute and also delete related chat from db
-
-def cleanup_old_images():
-
-    folder = os.path.join(
-        'app',
-        'static',
-        'uploads',
-        'chat_images'
-    )
-
-    if not os.path.exists(folder):
-        return
-
-    now = time.time()
-
-    for filename in os.listdir(folder):
-
-        file_path = os.path.join(folder, filename)
-
-        if os.path.isfile(file_path):
-
-            file_age = now - os.path.getmtime(file_path)
-
-            minutes_old = file_age / 60
-
-            # Delete after 1 minute
-            if minutes_old > 1:
-
-                image_url = f"/static/uploads/chat_images/{filename}"
-
-                # Find related chat
-                chat = Chat.query.filter_by(
-                    image_path=image_url
-                ).first()
-
-                # Delete image file
-                os.remove(file_path)
-
-                print(f"Deleted old image: {filename}")
-
-                # Delete chat row too
-                if chat:
-
-                    db.session.delete(chat)
-
-                    db.session.commit()
-
-                    print(f"Deleted related chat: {chat.id}")

@@ -19,6 +19,8 @@ login_manager = LoginManager()
 
 def create_app():
     app = Flask(__name__)
+
+    #this is needed to make sure that the app works correctly behind a reverse proxy like nginx, which is common in production environments. It ensures that the app can correctly determine the original request's protocol and host, which is important for generating correct URLs and handling redirects.
     app.wsgi_app = ProxyFix(
         app.wsgi_app,
         x_proto=1,
@@ -53,6 +55,7 @@ def create_app():
     with app.app_context():
         db.create_all()
 
+    # Start the scheduler only when the app is not in debug mode or when the reloader is running. This prevents multiple instances of the scheduler from starting during development.
     if not app.debug or os.environ.get("WERKZEUG_RUN_MAIN") == "true":
             start_scheduler()
 
