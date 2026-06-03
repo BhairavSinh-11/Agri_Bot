@@ -55,10 +55,6 @@
             z-index: 40;
         }
         
-        .sidebar.closed {
-            transform: translateX(-100%);
-        }
-        
         /* Chat Container */
         .chat-container {
             height: calc(100vh - 170px);
@@ -338,45 +334,62 @@
             border-left: 3px solid #22c55e;
         }
         
-        /* Mobile Responsive */
-        @media (max-width: 768px) {
-            .message-content {
-                max-width: 85%;
-                font-size: 0.9rem;
-            }
-            
-            .suggestion-chips {
-                overflow-x: auto;
-                flex-wrap: nowrap;
-                -webkit-overflow-scrolling: touch;
-            }
-            
-            .sidebar {
-                border-right: 2px solid #22c55e;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 280px;
-                height: 100vh;
-                z-index: 100;
-            }
-            
-            .sidebar-overlay {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0,0,0,0.5);
-                z-index: 99;
-                display: none;
-            }
-            
-            .sidebar-overlay.active {
-                display: block;
-            }
-        }
-        
+       @media (max-width: 768px) {
+
+    .message-content {
+        max-width: 85%;
+        font-size: 0.9rem;
+    }
+
+    .suggestion-chips {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 280px;
+        height: 100vh;
+
+        z-index: 9999;
+
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+
+        background: rgba(10, 15, 26, 0.98);
+        border-right: 2px solid #22c55e;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+
+        width: 100%;
+        height: 100%;
+
+        background: rgba(0,0,0,0.6);
+
+        z-index: 9998;
+
+        display: none;
+    }
+
+    .sidebar-overlay.active {
+        display: block;
+    }
+
+    #mainContent {
+        margin-left: 0 !important;
+    }
+} 
         /* Sidebar toggle button */
         .sidebar-toggle {
             transition: all 0.2s ease;
@@ -394,8 +407,8 @@
     <div id="sidebarOverlay" class="sidebar-overlay" onclick="closeSidebar()"></div>
 
     <!-- Sidebar - Chat History (DeepSeek Style) -->
-    <aside id="sidebar" class="sidebar fixed top-16 left-0 w-80 h-[calc(100vh-4rem)] flex flex-col shadow-2xl">
-        <!-- Sidebar Header -->
+   <aside id="sidebar"
+class="sidebar md:translate-x-0 md:top-16 md:h-[calc(100vh-4rem)] fixed left-0 w-80 flex flex-col shadow-2xl">    <!-- Sidebar Header -->
         <div class="p-4 border-b border-gray-800 flex items-center justify-between">
             <div class="flex items-center space-x-2">
                 <i class="fas fa-seedling text-2xl text-green-500"></i>
@@ -498,6 +511,7 @@
     {%include 'profile.html'%}
 
     <script>
+        
         let currentFile = null;
 
         async function loadChats() {
@@ -723,15 +737,14 @@ async function deleteChat(chatId) {
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebarOverlay');
-            sidebar.classList.toggle('closed');
+
+            sidebar.classList.toggle('open');
             overlay.classList.toggle('active');
         }
         
         function closeSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebarOverlay');
-            sidebar.classList.add('closed');
-            overlay.classList.remove('active');
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('sidebarOverlay').classList.remove('active');
         }
         
         function toggleMobileMenu() {
@@ -764,11 +777,19 @@ async function deleteChat(chatId) {
         
         // Initialize
         marked.setOptions({ breaks: true, gfm: true });
+window.onload = () => {
 
-        window.onload = () => {
-            addMessageToDOM("Hello {{display_name or 'Farmer'}} 😊 I am AgriBot. How can I help you today?", false);
-        loadChats();
-            };
+    addMessageToDOM(
+        "Hello {{display_name or 'Farmer'}} 😊 I am AgriBot. How can I help you today?",
+        false
+    );
+
+    loadChats();
+
+    if (window.innerWidth <= 768) {
+        closeSidebar();
+    }
+};
     </script>
 </body>
 </html>
